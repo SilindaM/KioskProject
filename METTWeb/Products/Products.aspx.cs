@@ -42,6 +42,7 @@ namespace MEWeb.Products
             base.Setup();
 
             ProductList = MELib.Products.ProductList.GetProductList();
+            CartList = MELib.Carts.CartList.GetCartList();
         }
         
         [WebCallable]
@@ -68,27 +69,48 @@ namespace MEWeb.Products
             try
             {
                 var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
-                MELib.Products.ProductList products = MELib.Products.ProductList.GetProductID(ProductID);
-                MELib.Products.Product  product = products.GetItem(ProductID);
-                MELib.Carts.Cart cart = MELib.Carts.Cart.NewCart();
-                MELib.Carts.CartList cartExists = MELib.Carts.CartList.GetCartByID(currentuser);
 
+                // get data for specific product
+                var products = MELib.Products.ProductList.GetProductList(ProductID).FirstOrDefault();
+                // var amount = products
+
+               // MELib.Products.Product  product = Product.GetItem(ProductID);
+                MELib.Carts.Cart cart = MELib.Carts.Cart.NewCart();
+                var cartExists = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
+
+                //Check if the cart has quantity
                 if (productCount<=0)
                 {
                     result.ErrorText = "Please specify product Quantity to be able to add it to Basket ";
                 }
                 else
                 {
-                    // check if the cart is not existing
-                    if(cartExists == null)
+                    // check if the product quantity is greater than quantity to be added in the cart
+                    if(products.ProductQuantity >= productCount)
                     {
+                        // check if the cart is not existing
+                        if (cartExists != null)
+                        {
+                            cart.TotalAmount = productCount;
+                            cart.ProductID = ProductID;
+                            cart.IsActiveInd = true;
+                            cart.UserID = Singular.Security.Security.CurrentIdentity.UserID;
+                            cart.TotalAmount = productCount * products.Price;
+                            cart.TrySave(typeof(MELib.Carts.CartList));
+                            result.Success = true;
+                        }
+                        // if the cart exists update the cart
+                        else
+                        {
+                            cartExists.UserID = cartExists.UserID;
 
+                        }
                     }
-                    // if the cart exists
                     else
                     {
-
+                        result.ErrorText = "No Enough Quantity In Stock";
                     }
+                    
                 }
 
             }

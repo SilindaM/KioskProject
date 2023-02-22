@@ -44,6 +44,8 @@ namespace MELib.Carts
         public class Criteria
           : CriteriaBase<Criteria>
         {
+
+            public int UserID;
             public Criteria()
             {
             }
@@ -67,7 +69,7 @@ namespace MELib.Carts
 
         public static CartList GetCartByID(int UserID)
         {
-            return DataPortal.Fetch<CartList>(new Criteria());
+            return DataPortal.Fetch<CartList>(new Criteria() { UserID = UserID});
         }
 
         protected void Fetch(SafeDataReader sdr)

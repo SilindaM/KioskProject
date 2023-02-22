@@ -121,7 +121,7 @@
           console.log(obj);
           ViewModel.CallServerMethod("AddToBasket", { ProductID: obj.ProductID(), productCount: obj.ProductQuantity(),ProductList: ViewModel.ProductList.Serialise() ,ShowLoadingBar: true }, function (result) {
               if (result.Success) {
-                  alert('Money Deposited Successfully');
+                  alert('Added To Cart Successfully');
                    Singular.AddMessage(3, 'Save', 'Added Successfully.').Fade(2000);
                   
               }

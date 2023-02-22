@@ -45,7 +45,7 @@ namespace MELib.Products
           : CriteriaBase<Criteria>
         {
             public int? ProductCategoryId = null;
-            public int ProductID ;
+            public int? ProductID ;
             public Criteria()
             {
             }
@@ -68,12 +68,12 @@ namespace MELib.Products
         }
 
         //get products by category
-        public static ProductList GetProductList(int? ProductCategoryId)
+        public static ProductList GetProductCategory(int? ProductCategoryId)
         {
             return DataPortal.Fetch<ProductList>(new Criteria { ProductCategoryId = ProductCategoryId });
         }
         //get products by id
-        public static ProductList GetProductID(int ProductID)
+        public static ProductList GetProductList(int? ProductID)
         {
             return DataPortal.Fetch<ProductList>(new Criteria { ProductID = ProductID });
         }
