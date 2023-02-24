@@ -45,6 +45,7 @@ namespace MEWeb.Products
 
             ProductList = MELib.Products.ProductList.GetProductList();
             CartList = MELib.Carts.CartList.GetCartList();
+            CartItemList = MELib.Carts.CartItemList.GetCartItemList();
         }
 
         [WebCallable]
@@ -103,15 +104,20 @@ namespace MEWeb.Products
                     // check if the product quantity is greater than quantity to be added in the cart
                     if (ProdSaveToBasket.ProductQuantity >= productCount)
                     {
-                        // if the cart user does not have active cart create them cart
+                        // if the cart user does not have cart create a new cart
                         if (cartExists == null)
                         {
-                            // Add to cart
+                            // Add new cart
                             cart.Quantity = productCount;
                             cart.IsActiveInd = true;
                             cart.UserID = Singular.Security.Security.CurrentIdentity.UserID;
                             cart.TotalAmount = productCount * ProdSaveToBasket.Price;
                             cart.DateCreated = DateTime.Now;
+                            //save to object
+                            currentUserCartList.Add(cart);
+
+                            //save to database
+                            currentUserCartList.Save();
 
                             //add to cart item
                             cartItem.ProductId = ProdSaveToBasket.ProductID;
@@ -123,17 +129,17 @@ namespace MEWeb.Products
                             cartItem.Quantity = ProdSaveToBasket.ProductQuantity;
                             cartItem.Value = ProdSaveToBasket.Price * ProdSaveToBasket.ProductQuantity;
 
-                            //save to database
-                            currentUserCartList.Add(cart);
+                            //save to object
                             cartItemList.Add(cartItem);
-                            currentUserCartList.Save();
+                        
+                            //save to database
                             cartItemList.Save();
 
                         }
                         // if the cart exists update the cart
                         else
                         {
-                            //if the cart does not exist and is not active
+                            // if the cart is not active
                             if (cartExists.IsActiveInd == false) { 
 
                                         // add to cart
@@ -148,15 +154,23 @@ namespace MEWeb.Products
                                         currentUserCartList.Save();
                             }
                             // check if the cart to be added exists in the cartItem, if exists update the product
+                            // alse edit the cart quantity and total amount
                             if(cartItemExists != null)
                             {
-                                cartItemExists.Quantity = cartItemExists.Quantity  +productCount; 
+                                // update the cart item
+                                cartItemExists.Quantity = cartItemExists.Quantity  +productCount;
                                 cartItemExists.Value += ProdSaveToBasket.Price * productCount;
                                 cartItemList.Add(cartItemExists);
                                 cartItemList.Save();
+
+                                // update the cart quantity and total amount
+                                cartExists.Quantity += cartItemExists.Quantity;
+                                cartExists.TotalAmount = cartExists.TotalAmount + cartItemExists.Value;
+                                currentUserCartList.Add(cartExists);
+                                currentUserCartList.Save();
                             }
 
-                            //if the product does not exist add it
+                            //if the product does not exist add it, in the cart items
                             else
                             {
                                 cartItem.ProductId = ProdSaveToBasket.ProductID;
