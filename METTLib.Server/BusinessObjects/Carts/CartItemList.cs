@@ -14,16 +14,16 @@ using System.Data.SqlClient;
 namespace MELib.Carts
 {
     [Serializable]
-    public class CartList
-     : SingularBusinessListBase<CartList, Cart>
+    public class CartItemList
+     : SingularBusinessListBase<CartItemList, CartItem>
     {
         #region " Business Methods "
 
-        public Cart GetItem(int CartID)
+        public CartItem GetItem(int CartItemID)
         {
-            foreach (Cart child in this)
+            foreach (CartItem child in this)
             {
-                if (child.CartID == CartID)
+                if (child.CartItemID == CartItemID)
                 {
                     return child;
                 }
@@ -33,7 +33,7 @@ namespace MELib.Carts
 
         public override string ToString()
         {
-            return "Carts";
+            return "Cart Items";
         }
 
         #endregion
@@ -44,41 +44,53 @@ namespace MELib.Carts
         public class Criteria
           : CriteriaBase<Criteria>
         {
-            public int? CartID = null;
+            public int? ProductId;
+            public int? userId;
             public Criteria()
             {
             }
-            public Criteria(int? CartID)
+            public Criteria(int? ProductId)
             {
-                this.CartID = CartID;
+                this.ProductId = ProductId;
+            }
+            public Criteria(int? ProductId, int? userId)
+            {
+                this.ProductId = ProductId;
+                this.userId = userId;
             }
 
         }
 
-        public static CartList NewCartList()
+        public static CartItemList NewCartItemList()
         {
-            return new CartList();
+            return new CartItemList();
         }
 
-        public CartList()
+        public CartItemList()
         {
             // must have parameter-less constructor
         }
 
-        public static CartList GetCartList()
+        public static CartItemList GetCartItemList()
         {
-            return DataPortal.Fetch<CartList>(new Criteria());
+            return DataPortal.Fetch<CartItemList>(new Criteria());
         }
-        public static CartList GetCartByID(int CartID)
+        public static CartItemList GetCartItemList(int? ProductId)
         {
-            return DataPortal.Fetch<CartList>(new Criteria());
+            return DataPortal.Fetch<CartItemList>(new Criteria { ProductId = ProductId });
         }
+
+        public static CartItemList GetCartItemList(int? ProductId,int? userId)
+        {
+            return DataPortal.Fetch<CartItemList>(new Criteria { ProductId = ProductId, userId = userId});
+        }
+
         protected void Fetch(SafeDataReader sdr)
         {
             this.RaiseListChangedEvents = false;
             while (sdr.Read())
             {
-                this.Add(Cart.GetCart(sdr));
+                this.Add(CartItem.GetCartItem(sdr));
             }
             this.RaiseListChangedEvents = true;
         }
@@ -94,7 +106,10 @@ namespace MELib.Carts
                     using (SqlCommand cm = cn.CreateCommand())
                     {
                         cm.CommandType = CommandType.StoredProcedure;
-                        cm.CommandText = "GetProcs.getCartList";
+                        cm.CommandText = "GetProcs.getCartItemList";
+                        cm.Parameters.AddWithValue("@ProductId", Singular.Misc.NothingDBNull(crit.ProductId));
+
+
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
                         {
                             Fetch(sdr);

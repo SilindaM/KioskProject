@@ -17,6 +17,8 @@ namespace MEWeb.Products
     {
         public MELib.Products.ProductList ProductList { get; set; }
         public MELib.Carts.CartList CartList { get; set; }
+        public MELib.Carts.CartItemList CartItemList { get; set; }
+        public MELib.Carts.CartItem CartItem { get; set; }
         public MELib.Carts.Cart Cart { get; set; }
         public bool isActiveInd { get; set; }
         public int UserID { get; set; }
@@ -44,7 +46,7 @@ namespace MEWeb.Products
             ProductList = MELib.Products.ProductList.GetProductList();
             CartList = MELib.Carts.CartList.GetCartList();
         }
-        
+
         [WebCallable]
         public Result FilterProducts(int ProductCategoryId)
         {
@@ -63,54 +65,120 @@ namespace MEWeb.Products
             }
             return sr;
         }
-       public static Result AddToBasket(int ProductID,int productCount, ProductList productlist)
+        public static Result AddToBasket(int ProductID, int productCount, ProductList productlist)
         {
             Result result = new Result();
             try
             {
+                // get current loggedin user
                 var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
 
-                // get data for specific product
-                var products = MELib.Products.ProductList.GetProductList(ProductID).FirstOrDefault();
-                // var amount = products
+                //Products
+                MELib.Products.ProductList SaveProd = MELib.Products.ProductList.GetProductList(ProductID);
+                MELib.Products.Product ProdSaveToBasket = SaveProd.GetItem(ProductID);
 
-               // MELib.Products.Product  product = Product.GetItem(ProductID);
+
+                // Cart
                 MELib.Carts.Cart cart = MELib.Carts.Cart.NewCart();
+                MELib.Carts.CartList currentUserCartList = MELib.Carts.CartList.NewCartList();
+
+                // Cart Items
+                MELib.Carts.CartItem cartItem = MELib.Carts.CartItem.NewCartItem();
+                MELib.Carts.CartItemList cartItemList = MELib.Carts.CartItemList.NewCartItemList();
+
+                //get product by id
+                var cartItemExists = MELib.Carts.CartItemList.GetCartItemList(ProductID).FirstOrDefault();
+                // MELib.Carts.CartItemList cartListItem = MELib.Carts.CartItemList.GetCartItemList;
+
+                //get the cart of logged in user 
                 var cartExists = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
 
                 //Check if the cart has quantity
-                if (productCount<=0)
+                if (productCount <= 0)
                 {
                     result.ErrorText = "Please specify product Quantity to be able to add it to Basket ";
                 }
                 else
                 {
                     // check if the product quantity is greater than quantity to be added in the cart
-                    if(products.ProductQuantity >= productCount)
+                    if (ProdSaveToBasket.ProductQuantity >= productCount)
                     {
-                        // check if the cart is not existing
-                        if (cartExists != null)
+                        // if the cart user does not have active cart create them cart
+                        if (cartExists == null)
                         {
-                            cart.TotalAmount = productCount;
-                            cart.ProductID = ProductID;
+                            // Add to cart
+                            cart.Quantity = productCount;
                             cart.IsActiveInd = true;
                             cart.UserID = Singular.Security.Security.CurrentIdentity.UserID;
-                            cart.TotalAmount = productCount * products.Price;
-                            cart.TrySave(typeof(MELib.Carts.CartList));
-                            result.Success = true;
+                            cart.TotalAmount = productCount * ProdSaveToBasket.Price;
+                            cart.DateCreated = DateTime.Now;
+
+                            //add to cart item
+                            cartItem.ProductId = ProdSaveToBasket.ProductID;
+                            cartItem.ProductName = ProdSaveToBasket.ProductName;
+                            cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
+                            cartItem.CartID = cart.CartID;
+                            cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
+                            cartItem.Price = ProdSaveToBasket.Price;
+                            cartItem.Quantity = ProdSaveToBasket.ProductQuantity;
+                            cartItem.Value = ProdSaveToBasket.Price * ProdSaveToBasket.ProductQuantity;
+
+                            //save to database
+                            currentUserCartList.Add(cart);
+                            cartItemList.Add(cartItem);
+                            currentUserCartList.Save();
+                            cartItemList.Save();
+
                         }
                         // if the cart exists update the cart
                         else
                         {
-                            cartExists.UserID = cartExists.UserID;
+                            //if the cart does not exist and is not active
+                            if (cartExists.IsActiveInd == false) { 
 
+                                        // add to cart
+                                        cartExists.UserID = cartExists.UserID;
+                                        cart.IsActiveInd = cartExists.IsActiveInd;
+                                        cart.UserID = cartExists.UserID;
+                                        cart.TotalAmount += productCount * ProdSaveToBasket.Price;
+                                        cart.DateCreated = cartExists.DateCreated;
+                                        cart.DateModified = DateTime.Now;
+                                        cart.Quantity = cartExists.Quantity + productCount;
+                                        currentUserCartList.Add(cart);
+                                        currentUserCartList.Save();
+                            }
+                            // check if the cart to be added exists in the cartItem, if exists update the product
+                            if(cartItemExists != null)
+                            {
+                                cartItemExists.Quantity = cartItemExists.Quantity  +productCount; 
+                                cartItemExists.Value += ProdSaveToBasket.Price * productCount;
+                                cartItemList.Add(cartItemExists);
+                                cartItemList.Save();
+                            }
+
+                            //if the product does not exist add it
+                            else
+                            {
+                                cartItem.ProductId = ProdSaveToBasket.ProductID;
+                                cartItem.ProductName = ProdSaveToBasket.ProductName;
+                                cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
+                                cartItem.CartID = cartExists.CartID;
+                                cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
+                                cartItem.Price = ProdSaveToBasket.Price;
+                                cartItem.Quantity = productCount;
+                                cartItem.Value += ProdSaveToBasket.Price * productCount;
+                                cartItemList.Add(cartItem);
+                                cartItemList.Save();
+                            }
                         }
+                        //saving
+                        result.Success = true;
                     }
                     else
                     {
                         result.ErrorText = "No Enough Quantity In Stock";
                     }
-                    
+
                 }
 
             }
@@ -123,4 +191,3 @@ namespace MEWeb.Products
         }
     }
 }
-

@@ -57,6 +57,8 @@
     <Compile Include="BusinessObjects\Accounts\AccountList.cs" />
     <Compile Include="BusinessObjects\Base\BaseObjects.cs" />
     <Compile Include="BusinessObjects\Carts\Cart.cs" />
+    <Compile Include="BusinessObjects\Carts\CartItem.cs" />
+    <Compile Include="BusinessObjects\Carts\CartItemList.cs" />
     <Compile Include="BusinessObjects\Carts\CartList.cs" />
     <Compile Include="BusinessObjects\Categories\Category.cs" />
     <Compile Include="BusinessObjects\Categories\CategoryList.cs" />

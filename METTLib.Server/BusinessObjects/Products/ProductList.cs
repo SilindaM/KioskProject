@@ -46,6 +46,7 @@ namespace MELib.Products
         {
             public int? ProductCategoryId = null;
             public int? ProductID ;
+            public bool? IsActiveInd;
             public Criteria()
             {
             }
@@ -72,10 +73,17 @@ namespace MELib.Products
         {
             return DataPortal.Fetch<ProductList>(new Criteria { ProductCategoryId = ProductCategoryId });
         }
+
+
         //get products by id
         public static ProductList GetProductList(int? ProductID)
         {
             return DataPortal.Fetch<ProductList>(new Criteria { ProductID = ProductID });
+        }
+        //get products by id and is active
+        public static ProductList GetProductList(int? ProductID, bool isActiveInd)
+        {
+            return DataPortal.Fetch<ProductList>(new Criteria { ProductID = ProductID, IsActiveInd = isActiveInd });
         }
 
         protected void Fetch(SafeDataReader sdr)

@@ -97,7 +97,6 @@ namespace MELib.Movies
           {
             cm.CommandType = CommandType.StoredProcedure;
             cm.CommandText = "GetProcs.getMovieList";
-
             cm.Parameters.AddWithValue("@MovieGenreID", Singular.Misc.NothingDBNull(crit.MovieGenreID));
 
             using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
@@ -112,9 +111,7 @@ namespace MELib.Movies
         }
       }
     }
-
     #endregion
-
   }
 
 }
