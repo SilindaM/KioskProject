@@ -19,11 +19,25 @@
                {
                    var HomeContainer = PanelContainer.Helpers.DivC("tabs-container");
                    {
+                       var currentCart = HomeContainer.Helpers.DivC("col-md-12 text-right");
+                       {
+                           var quantity = 20;
+                           var btnView = currentCart.Helpers.Button("${`quantity`}", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.shoppingBasket);
+                           {
+                               btnView.AddClass("btn btn-success btn-outline");
+                               btnView.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewBasket()");
+                           }
+                       }
                        var AssessmentsTab = HomeContainer.Helpers.TabControl();
                        {
                            AssessmentsTab.Style.ClearBoth();
                            AssessmentsTab.AddClass("nav nav-tabs");
+
+
+
+
                            var HomeContainerTab = AssessmentsTab.AddTab("Products Table");
+
                            {
                                var Row = HomeContainerTab.Helpers.DivC("row margin0");
                                {
@@ -52,11 +66,11 @@
                                                    var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                    {
                                                        var ProductSection = ColContentDiv.Helpers.BootstrapTableFor<MELib.Products.Product>((c) => c.ProductList, false, false, "");
-                                                       var CartList = ColContentDiv.Helpers.BootstrapTableFor<MELib.Carts.Cart>((ca) => ca.Cart, false, false, "");
+                                                       // var CartList = ColContentDiv.Helpers.BootstrapTableFor<MELib.Carts.Cart>((ca) => ca.Cart, false, false, "");
                                                        {
 
                                                            var ProductListRow = ProductSection.FirstRow;
-                                                           var CartListRow = CartList.FirstRow;
+                                                           // var CartListRow = CartList.FirstRow;
                                                            ProductListRow.Style.BackgroundColour = "#1000";
 
                                                            {
@@ -79,7 +93,7 @@
                                                                var CartQuantity = ProductListRow.AddColumn("Quantity");
                                                                {
                                                                    var Quantity = CartQuantity.Helpers.EditorFor(c => c.ProductQuantity);
-                                                                  
+
                                                                    Quantity.Style.FontSize = "15px";
                                                                }
 
@@ -92,7 +106,6 @@
                                                                        Action.Style.Width = "100px";
                                                                    }
                                                                }
-
                                                            }
                                                        }
                                                    }
@@ -118,7 +131,6 @@
     });
 
       var AddToBasket = function (obj) {
-          console.log(obj);
           ViewModel.CallServerMethod("AddToBasket", { ProductID: obj.ProductID(), productCount: obj.ProductQuantity(),ProductList: ViewModel.ProductList.Serialise() ,ShowLoadingBar: true }, function (result) {
               if (result.Success) {
                   alert('Added To Cart Successfully');
@@ -130,6 +142,9 @@
                   // MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
               }
           });
+      }
+      var ViewBasket = function () {
+          window.location = '../Carts/Cart.aspx';
       }
       
   </script>

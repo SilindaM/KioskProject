@@ -44,19 +44,15 @@ namespace MELib.Carts
         public class Criteria
           : CriteriaBase<Criteria>
         {
-            public int? ProductId;
-            public int? userId;
+            public int? ProductId =null;
+            public int? CartId =null;
             public Criteria()
             {
             }
-            public Criteria(int? ProductId)
+            public Criteria(int? ProductId, int? cartId)
             {
                 this.ProductId = ProductId;
-            }
-            public Criteria(int? ProductId, int? userId)
-            {
-                this.ProductId = ProductId;
-                this.userId = userId;
+                this.CartId = cartId;
             }
 
         }
@@ -75,14 +71,14 @@ namespace MELib.Carts
         {
             return DataPortal.Fetch<CartItemList>(new Criteria());
         }
-        public static CartItemList GetCartItemList(int? ProductId)
+        public static CartItemList GetCartItemByProductId(int? ProductId)
         {
             return DataPortal.Fetch<CartItemList>(new Criteria { ProductId = ProductId });
         }
 
-        public static CartItemList GetCartItemList(int? ProductId,int? userId)
+        public static CartItemList GetCartItemByCartId(int? CartId)
         {
-            return DataPortal.Fetch<CartItemList>(new Criteria { ProductId = ProductId, userId = userId});
+            return DataPortal.Fetch<CartItemList>(new Criteria { CartId = CartId });
         }
 
         protected void Fetch(SafeDataReader sdr)
@@ -107,8 +103,9 @@ namespace MELib.Carts
                     {
                         cm.CommandType = CommandType.StoredProcedure;
                         cm.CommandText = "GetProcs.getCartItemList";
-                        cm.Parameters.AddWithValue("@ProductId", Singular.Misc.NothingDBNull(crit.ProductId));
 
+                        cm.Parameters.AddWithValue("@ProductId", Singular.Misc.NothingDBNull(crit.ProductId));
+                        cm.Parameters.AddWithValue("@CartId", Singular.Misc.NothingDBNull(crit.CartId));
 
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
                         {

@@ -269,8 +269,8 @@ namespace MELib.Carts
 
             return (scm) =>
             {
-    // Post Save
-    if (this.IsNew)
+                // Post Save
+                if (this.IsNew)
                 {
                     LoadProperty(CartIDProperty, scm.Parameters["@CartID"].Value);
                 }

@@ -45,6 +45,7 @@ namespace MELib.Carts
           : CriteriaBase<Criteria>
         {
             public int? CartID = null;
+            public int? UserID = null;
             public Criteria()
             {
             }
@@ -73,6 +74,10 @@ namespace MELib.Carts
         {
             return DataPortal.Fetch<CartList>(new Criteria());
         }
+        public static CartList GetCartByUserID(int? UserId)
+        {
+            return DataPortal.Fetch<CartList>(new Criteria{UserID = UserId });
+        }
         protected void Fetch(SafeDataReader sdr)
         {
             this.RaiseListChangedEvents = false;
@@ -95,8 +100,9 @@ namespace MELib.Carts
                     {
                         cm.CommandType = CommandType.StoredProcedure;
                         cm.CommandText = "GetProcs.getCartList";
+                        cm.Parameters.AddWithValue("@UserID", Singular.Security.Security.CurrentIdentity.UserID);
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
-                        {
+                                      {
                             Fetch(sdr);
                         }
                     }

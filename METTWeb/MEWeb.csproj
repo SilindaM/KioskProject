@@ -94,6 +94,7 @@
     <Content Include="Account\ErrorPage.aspx" />
     <Content Include="Account\Home.aspx" />
     <Content Include="Account\Login.aspx" />
+    <Content Include="Carts\Cart.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="DLLs\Infragistics4.Documents.Word.v12.2.dll" />
     <Content Include="Examples\EditableTable.aspx" />
@@ -316,6 +317,13 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Carts\CartLookup.cs" />
+    <Compile Include="Carts\Cart.aspx.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Carts\Cart.aspx.designer.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BreadcrumbV2.cs" />
     <Compile Include="Controls\CustomControls.cs" />
     <Compile Include="Controls\FactorEditor.cs">

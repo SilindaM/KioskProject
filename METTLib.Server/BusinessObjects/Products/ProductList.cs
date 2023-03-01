@@ -108,6 +108,8 @@ namespace MELib.Products
                     {
                         cm.CommandType = CommandType.StoredProcedure;
                         cm.CommandText = "GetProcs.getProductList";
+                        cm.Parameters.AddWithValue("@ProductID", Singular.Misc.NothingDBNull(crit.ProductID));
+
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
                         {
                             Fetch(sdr);

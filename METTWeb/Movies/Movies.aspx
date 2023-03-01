@@ -81,7 +81,7 @@
                         {
                           var RightColContentDiv = RightRowContentDiv.Helpers.DivC("col-md-12");
                           {
-                            RightColContentDiv.Helpers.LabelFor(c => ViewModel.MovieGenreID);
+                            RightColContentDiv.Helpers.EditorFor(c => ViewModel.test);
                             var ReleaseFromDateEditor = RightColContentDiv.Helpers.EditorFor(c => ViewModel.MovieGenreID);
                             ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
 
