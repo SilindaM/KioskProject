@@ -17,11 +17,11 @@ namespace MEWeb.Carts
     {
         public MELib.Carts.CartItemList CartItemList { get; set; }
         public MELib.Products.ProductList ProductList { get; set; }
-        public MELib.Carts.CartList CartList { get; set; }
+        public MELib.Carts.CartList cartList { get; set; }
         public MELib.Carts.CartItem CartItem { get; set; }
         public MELib.Carts.Cart Cart { get; set; }
-        public decimal TotalAmount { get; set; } 
-        public int totalQuantity { get; set; } 
+        public decimal TotalAmount { get; set; }
+        public int totalQuantity { get; set; }
         public int ItemQuantity { get; set; }
         public int ProductID { get; set; }
 
@@ -34,15 +34,16 @@ namespace MEWeb.Carts
         protected override void Setup()
         {
             base.Setup();
-            
-            CartList = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
 
-            var cartId = CartList.FirstOrDefault().CartID;
+            cartList = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
+
+            var cartId = cartList.FirstOrDefault().CartID;
             ProductList = MELib.Products.ProductList.GetProductList();
+
             CartItemList = MELib.Carts.CartItemList.GetCartItemByCartId(cartId);
-            TotalAmount = CartList.FirstOrDefault().TotalAmount;
-     
-          //  totalQuantity = CartList.FirstOrDefault().Quantity;
+            TotalAmount = cartList.FirstOrDefault().TotalAmount;
+
+            //  totalQuantity = CartList.FirstOrDefault().Quantity;
             //ItemQuantity = CartItemList.FirstOrDefault().Quantity;
 
         }
@@ -95,18 +96,16 @@ namespace MEWeb.Carts
             }
         }
         // method to delete from cart
-
-        [WebCallable]
-        public static Result deleteCartItem(int ProductID, int productCount)
+        
+        public static Result DeleteCartItem(int CartItemID, int ProductId, int productCount, CartItemList cartItemList)
         {
-            ProductID = 1;
             Result result = new Result();
             // get current loggedin user
             var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
 
             //Products
-           var SaveProd = MELib.Products.ProductList.GetProductList(ProductID);
-         
+            var SaveProd = MELib.Products.ProductList.GetProductList(ProductId);
+
             //get the cart of logged in user 
             var userCart = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
 
@@ -127,7 +126,7 @@ namespace MEWeb.Carts
             }
             catch (Exception e)
             {
-                WebError.LogError(e, "Page: products.aspx | Method: FilterProductCategory", $"(int ProductCategoryId, ({ProductID})");
+                WebError.LogError(e, "Page: products.aspx | Method: FilterProductCategory", $"(int ProductCategoryId, ({ProductId})");
                 result.Data = e.InnerException;
                 result.ErrorText = "Could not filter products by category.";
                 result.Success = false;
@@ -149,9 +148,12 @@ namespace MEWeb.Carts
         }
 
         // update cart
-        
-        public static Result UpdateCart(int ProductId, int productCount, CartItemList cartItemList, ProductList productlist)
+
+        public static Result UpdateCart(int CartItemID,int ProductId, int productCount, CartItemList cartItemList)
         {
+            //cart
+           var  cartList = MELib.Carts.CartList.GetCartList();
+
             var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
 
             //Products
@@ -161,15 +163,20 @@ namespace MEWeb.Carts
             var userCart = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
 
             //get the cart of the  current user
-            var cartId = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
+            //var cartId = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
 
             // get the cart items
-            var cartItems = MELib.Carts.CartItemList.GetCartItemByCartId(Convert.ToInt32(cartId.CartID)).FirstOrDefault();
+            var cartItems = MELib.Carts.CartItemList.GetCartItemByCartItemId(Convert.ToInt32(CartItemID)).FirstOrDefault();
+            // get the cart items
+            // var cartItems = cartItem;
 
             Result result = new Result();
             try
             {
-                if (cartItems.Quantity > products.ProductQuantity)
+                //get cartQuantity to update
+                var cartQuantity = cartItems.Quantity - productCount;
+
+                if (cartItems.Quantity > products.ProductQuantity && cartQuantity<=cartItems.Quantity)
                 {
                     result.Success = false;
                     result.ErrorText = "Sorry only " + products.ProductQuantity.ToString() + " left In Stock";
@@ -184,18 +191,24 @@ namespace MEWeb.Carts
                     // also decrease cart Item Quantity
                     if (cartItems.Quantity > productCount)
                     {
-
-
                         // return the items in the stock
-                        ProductAddition(Convert.ToInt32(cartItems.ProductId), Convert.ToInt32(cartItems.Quantity));
+                        ProductAddition(Convert.ToInt32(cartItems.ProductId), newQuantity);
                         //decrease the cartitem 
                         cartItems.Quantity -= productCount;
-                        //increase the amount of products to be returned
-                        cartItems.Value = productCount * products.Price;
-                        //decrease the cart quantity
-                        cartId.Quantity -= cartItems.Quantity;
                         //decrease the price of the cart amount
-                        cartItems.Value = productCount * products.Price;
+                        cartItems.Value -= productCount * products.Price;
+                        //save the cart Item
+                        cartItemList.Add(cartItems);
+                        cartItemList.Save();
+
+
+                        //decrease the cart quantity
+                        userCart.Quantity -= cartItems.Quantity;
+                        //decrease the cart total amount
+                        userCart.TotalAmount -= productCount * products.Price;
+                        //save the update in the users cart
+                        cartList.Add(userCart);
+                        cartList.Save();
                     }
                     // if the old cartItem product is less than the new quantity, the subtract the products from the stock, 
                     // also decrease cart Item Quantity
@@ -203,19 +216,31 @@ namespace MEWeb.Carts
                     {
 
 
-                        // subtract from the stock
-                        ProductSubtraction(Convert.ToInt32(cartItems.ProductId), Convert.ToInt32(cartItems.Quantity));
-                        //increament the cartItems
-                        cartItems.Quantity += productCount;
-                        //increase the amount of products to be returned
-                        cartItems.Value = productCount * products.Price;
-                        //increase the cart quantity
-                        cartId.Quantity += cartItems.Quantity;
-                        //increase the amount of products to be returned
-                        cartItems.Value = productCount * products.Price;
+                        //get the new product count in the cart
+                        var UpdateQuantity = productCount - cartItems.Quantity ;
+
+                        // return the items in the stock
+                            ProductSubtraction(Convert.ToInt32(cartItems.ProductId), UpdateQuantity);
+                            //increase the cartitem 
+                            cartItems.Quantity += UpdateQuantity;
+                            //increase the price of the cart amount
+                            cartItems.Value += UpdateQuantity * products.Price;
+                            //save the cart Item
+                            cartItemList.Add(cartItems);
+                            cartItemList.Save();
+
+
+                            //increase the cart quantity
+                            userCart.Quantity += UpdateQuantity;
+                            //increase the cart total amount
+                            userCart.TotalAmount += UpdateQuantity * products.Price;
+                            //save the update in the users cart
+                            cartList.Add(userCart);
+                            cartList.Save();
                     }
                 }
             }
+
             catch (Exception e)
             {
                 result.ErrorText = "Failed To Update";
@@ -223,7 +248,7 @@ namespace MEWeb.Carts
             }
             return result;
         }
-        
+
         public static Result ConfirmCartItems()
         {
             Result result = new Result();

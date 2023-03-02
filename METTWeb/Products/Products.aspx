@@ -135,7 +135,8 @@
               if (result.Success) {
                   alert('Added To Cart Successfully');
                    Singular.AddMessage(3, 'Save', 'Added Successfully.').Fade(2000);
-                  
+
+
               }
               else {
                   Singular.AddMessage(1, 'Error', result.ErrorText).Fade(2000);

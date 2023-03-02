@@ -45,7 +45,8 @@ namespace MELib.Carts
           : CriteriaBase<Criteria>
         {
             public int? ProductId =null;
-            public int? CartId =null;
+            public int? CartId = null;
+            public int? CartItemId = null;
             public Criteria()
             {
             }
@@ -80,6 +81,10 @@ namespace MELib.Carts
         {
             return DataPortal.Fetch<CartItemList>(new Criteria { CartId = CartId });
         }
+        public static CartItemList GetCartItemByCartItemId(int? CartItemID)
+        {
+            return DataPortal.Fetch<CartItemList>(new Criteria { CartItemId = CartItemID });
+        }
 
         protected void Fetch(SafeDataReader sdr)
         {
@@ -106,6 +111,7 @@ namespace MELib.Carts
 
                         cm.Parameters.AddWithValue("@ProductId", Singular.Misc.NothingDBNull(crit.ProductId));
                         cm.Parameters.AddWithValue("@CartId", Singular.Misc.NothingDBNull(crit.CartId));
+                        cm.Parameters.AddWithValue("@CartItemId", Singular.Misc.NothingDBNull(crit.CartItemId));
 
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
                         {
