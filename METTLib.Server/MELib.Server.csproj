@@ -76,6 +76,8 @@
     <Compile Include="BusinessObjects\Movies\MovieList.cs" />
     <Compile Include="BusinessObjects\Movies\UserMovie.cs" />
     <Compile Include="BusinessObjects\Movies\UserMovieList.cs" />
+    <Compile Include="BusinessObjects\Orders\Order.cs" />
+    <Compile Include="BusinessObjects\Orders\OrderList.cs" />
     <Compile Include="BusinessObjects\ProductCategory\ProductCategory.cs" />
     <Compile Include="BusinessObjects\ProductCategory\ProductCategoryList.cs" />
     <Compile Include="BusinessObjects\Products\Product.cs" />

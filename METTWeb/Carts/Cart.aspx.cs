@@ -1,4 +1,5 @@
-﻿using MELib.Carts;
+﻿using MELib.Accounts;
+using MELib.Carts;
 using MELib.Products;
 using Singular.Web;
 using System;
@@ -20,10 +21,14 @@ namespace MEWeb.Carts
         public MELib.Carts.CartList cartList { get; set; }
         public MELib.Carts.CartItem CartItem { get; set; }
         public MELib.Carts.Cart Cart { get; set; }
+        public MELib.Orders.OrderList OrderList { get; set; }
         public decimal TotalAmount { get; set; }
         public int totalQuantity { get; set; }
         public int ItemQuantity { get; set; }
         public int ProductID { get; set; }
+        public MELib.Accounts.AccountList UpdateAccount { get; set; }
+        public MELib.Accounts.Account Deposit { get; set; }
+        public int? AccountID { get; set; }
 
 
         public int testRotal { get; set; } = 0;
@@ -34,14 +39,17 @@ namespace MEWeb.Carts
         protected override void Setup()
         {
             base.Setup();
+            var cartById = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
 
-            cartList = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
-
-            var cartId = cartList.FirstOrDefault().CartID;
+            var cartId = cartById.FirstOrDefault().CartID;
             ProductList = MELib.Products.ProductList.GetProductList();
 
             CartItemList = MELib.Carts.CartItemList.GetCartItemByCartId(cartId);
-            TotalAmount = cartList.FirstOrDefault().TotalAmount;
+            TotalAmount = cartById.FirstOrDefault().TotalAmount;
+            UpdateAccount = MELib.Accounts.AccountList.GetAccountList();
+            Deposit = UpdateAccount.FirstOrDefault();
+            cartList = MELib.Carts.CartList.GetCartList();
+
 
             //  totalQuantity = CartList.FirstOrDefault().Quantity;
             //ItemQuantity = CartItemList.FirstOrDefault().Quantity;
@@ -53,7 +61,6 @@ namespace MEWeb.Carts
             Result result = new Result();
             try
             {
-
                 //Products
                 MELib.Products.ProductList SaveProd = MELib.Products.ProductList.GetProductList(ProductID);
                 //get quantity of specific product
@@ -99,27 +106,44 @@ namespace MEWeb.Carts
         
         public static Result DeleteCartItem(int CartItemID, int ProductId, int productCount, CartItemList cartItemList)
         {
-            Result result = new Result();
-            // get current loggedin user
+            //cart
+            var cartList = MELib.Carts.CartList.GetCartList();
+
             var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
 
             //Products
-            var SaveProd = MELib.Products.ProductList.GetProductList(ProductId);
+            var products = MELib.Products.ProductList.GetProductList(ProductId).FirstOrDefault();
 
             //get the cart of logged in user 
             var userCart = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
 
             //get the cart of the  current user
-            var cartId = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
+            //var cartId = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
 
             // get the cart items
-            var cartItems = MELib.Carts.CartItemList.GetCartItemByCartId(Convert.ToInt32(SaveProd)).FirstOrDefault();
+            var cartItems = MELib.Carts.CartItemList.GetCartItemByCartItemId(Convert.ToInt32(CartItemID)).FirstOrDefault();
+            // get the cart items
+            // var cartItems = cartItem;
+
+
+            Result result = new Result();
             try
             {
                 // return the items in the stock
                 ProductAddition(Convert.ToInt32(cartItems.ProductId), Convert.ToInt32(cartItems.Quantity));
-                //make userCartQuantity 0
-                userCart.Quantity = 0;
+                // update quantity in the User's cart
+                userCart.Quantity -= cartItems.Quantity;
+                //update the total amount in the user's cart
+                userCart.TotalAmount -= cartItems.Value;
+
+                //update in the database of the user's cart
+                cartList.Add(userCart);
+                cartList.Save();
+
+
+                //remove item from the db
+                cartItemList.Remove(cartItems);
+                cartItemList.Save();
 
 
                 result.Success = true;
@@ -132,19 +156,6 @@ namespace MEWeb.Carts
                 result.Success = false;
             }
             return result;
-        }
-
-        // clear cart
-        public static void clearUserCart(int userId)
-        {
-            Result result = new Result();
-            try
-            {
-
-            }
-            catch (Exception e)
-            {
-            }
         }
 
         // update cart
@@ -248,15 +259,144 @@ namespace MEWeb.Carts
             }
             return result;
         }
-
-        public static Result ConfirmCartItems()
+        //confirm the cart
+        public static Result CompleteCart(CartItemList CartItemList)
         {
+            //get the current user
+            var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
+            
+            //get the cart of logged in user 
+            var userCart = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
+
+            //create newOrderList
+            MELib.Orders.OrderList newOrdersList = MELib.Orders.OrderList.NewOrderList();
+            //create single order
+            MELib.Orders.Order newOrder = MELib.Orders.Order.NewOrder();
+
+            // get the cart items
+            // var cartItems = MELib.Carts.CartItemList.GetCartItemByCartItemId(Convert.ToInt32(CartItemID)).FirstOrDefault();
+
+            //cart total amount
+            var TotalAmount = userCart.TotalAmount;
+
             Result result = new Result();
             try
             {
+                // make subtraction from the user's account
+                AmountDeduction(currentuser, TotalAmount);
+                //update the cart
+                userCart.TrySave(typeof(CartList));
+
+                //Create New Order
+                newOrder.UserID =currentuser;
+                newOrder.OrderedDate = DateTime.Now;
+                newOrder.CartID = userCart.CartID;
+                newOrder.CompletedBy = currentuser;
+                newOrder.OrderAmount = TotalAmount;
+                //save to the ordersList
+                newOrdersList.Add(newOrder);
+                newOrdersList.Save();
+            }
+            catch (Exception e)
+            {
+
+            }
+            return result;
+        }
+        // method to deduct amount
+        [WebCallable]
+        public static Result AmountDeduction(int userId, decimal Amount)
+        {
+            //get the current user
+            var currentUser = MELib.Accounts.AccountList.GetAccountByID(userId).FirstOrDefault();
+            //  currentUser.UserID = Singular.Security.Security.CurrentIdentity.UserID;
+
+            Result result = new Result();
+            try
+            {
+                //check if the amount to be deducted is greater than account balance
+                if (currentUser.Balance >= Amount)
+                {
+                    currentUser.Balance -= Amount;
+                    currentUser.TrySave(typeof(AccountList));
+                }
+                else
+                {
+                    result.ErrorText = "Insufficient Amount";
+                }
 
             }
             catch (Exception e)
+            {
+                result.Data = e.InnerException;
+                result.Success = false;
+
+            }
+            return result;
+        }
+        // method to deduct amount
+        [WebCallable]
+        public static Result AmountAddition(int userId, decimal Amount)
+        {
+            //get the current user
+            var currentUser = MELib.Accounts.AccountList.GetAccountByID(userId).FirstOrDefault();
+            //  currentUser.UserID = Singular.Security.Security.CurrentIdentity.UserID;
+
+            Result result = new Result();
+            try
+            {
+                    currentUser.Balance += Amount;
+                    currentUser.TrySave(typeof(AccountList));
+
+            }
+            catch (Exception e)
+            {
+                result.Data = e.InnerException;
+                result.Success = false;
+
+            }
+            return result;
+        }
+
+
+        //remove all items in cart
+        public static Result ClearCart(CartItemList CartItemList)
+        {
+            
+            //get the current user
+            var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
+
+            //get the cart of logged in user 
+            var userCart = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
+
+            // get the cart items
+            var cartItems = MELib.Carts.CartItemList.GetCartItemByCartItemId(Convert.ToInt32(userCart.CartID)).FirstOrDefault();
+
+            //cart total amount
+            var TotalAmount = userCart.TotalAmount;
+            Result result = new Result();
+            try
+            {
+                // loop through the itemlist
+                foreach (var product in CartItemList)
+                {
+                    // return each product
+                    ProductAddition(Convert.ToInt32(product.ProductId),product.Quantity);
+                }
+                // return the amount
+                AmountAddition(currentuser, userCart.TotalAmount);
+                // clear cart item
+                CartItemList.Clear();
+                //save the cart item, cartItem now is empty;
+                CartItemList.Save();
+
+                //update the cart
+                userCart.TotalAmount = 0;
+                userCart.Quantity = 0;
+                userCart.TrySave(typeof(CartList));
+
+            }
+            catch(Exception e)
             {
 
             }

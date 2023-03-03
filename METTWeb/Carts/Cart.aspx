@@ -130,12 +130,12 @@
 
                                                     var CompleteBtn = RightColContentDiv.Helpers.Button("Confirm ", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.save);
                                                     {
-                                                        CompleteBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterMovies($data)");
+                                                        CompleteBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "CompleteCart($data)");
                                                         CompleteBtn.AddClass("btn btn-success btn-outline");
                                                     }
-                                                    var cancel = RightColContentDiv.Helpers.Button("Clear ", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.remove);
+                                                    var cancel = RightColContentDiv.Helpers.Button("Clear Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.remove);
                                                     {
-                                                        cancel.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterMovies($data)");
+                                                        cancel.AddBinding(Singular.Web.KnockoutBindingString.click, "ClearCart($data)");
                                                         cancel.AddClass("btn btn-primary btn-outline");
                                                     }
                                                 }
@@ -192,5 +192,30 @@
                 }
             });
         }
+        var CompleteCart = function (obj) {
+            ViewModel.CallServerMethod("CompleteCart", {CartItemList: ViewModel.CartItemList.Serialise(), ShowLoadingBar: true }, function (result) {
+            if (result.Success) {
+                            alert('Item Removed Successfully Successfully');
+                            Singular.AddMessage(3, 'Save', 'Removed Successfully.').Fade(2000);
+                        }
+                        else {
+                            Singular.AddMessage(1, 'Error', result.ErrorText).Fade(2000);
+                            // MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+                        }
+                    });
+        }
+        var ClearCart = function (obj) {
+            ViewModel.CallServerMethod("ClearCart", {CartItemList: ViewModel.CartItemList.Serialise(), ShowLoadingBar: true }, function (result) {
+            if (result.Success) {
+                            alert('Cart Cleared Successfully');
+                            Singular.AddMessage(3, 'Save', 'Removed Successfully.').Fade(2000);
+                        }
+                        else {
+                            Singular.AddMessage(1, 'Error', result.ErrorText).Fade(2000);
+                            // MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+                        }
+                    });
+        }
+
     </script>
 </asp:Content>

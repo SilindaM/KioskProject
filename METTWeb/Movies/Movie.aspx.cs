@@ -12,9 +12,11 @@ namespace MEWeb.Movies
   {
   }
   public class MovieVM : MEStatelessViewModel<MovieVM>
-  {
-       
-    public String MovieTitle { get; set; }
+    {
+        public MELib.Movies.MovieList MovieList{ get; set; }
+        public int MovieID { get; set; }
+
+        public String MovieTitle { get; set; }
 
     public MovieVM()
     {
@@ -23,8 +25,7 @@ namespace MEWeb.Movies
     protected override void Setup()
     {
       base.Setup();
-
-
+      MovieList = MELib.Movies.MovieList.GetMovieList();
     }
   }
 }

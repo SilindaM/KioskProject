@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
+using MELib.Carts;
 using Singular.Web;
 
 namespace MEWeb.Products
@@ -161,23 +162,37 @@ namespace MEWeb.Products
                         // if the cart exists, update the cart
                         else
                         {
-                            // if the cart is not active
-                            if (cartExists.IsActiveInd == false)
-                            {
+                            //// if the cart is not active
+                            //if (cartExists.IsActiveInd == false)
+                            //{
 
-                                // add to cart
-                                cartExists.UserID = cartExists.UserID;
-                                cart.IsActiveInd = cartExists.IsActiveInd;
-                                cart.UserID = cartExists.UserID;
-                                cart.TotalAmount += productCount * ProdSaveToBasket.Price;
-                                cart.DateCreated = cartExists.DateCreated;
-                                cart.DateModified = DateTime.Now;
-                                cart.Quantity = cartExists.Quantity + productCount;
-                                currentUserCartList.Add(cart);
-                                currentUserCartList.Save();
-                                //subtract products from the database
-                                ProductSubtract(Convert.ToInt32(cartItemExists.ProductId), productCount);
-                            }
+                            //    // Activate the isActive property and update the 
+                            //    cartExists.IsActiveInd = true;
+                            //    cartExists.Quantity = productCount;
+                            //    cartExists.TotalAmount = productCount * ProdSaveToBasket.Price;
+                            //    cartExists.DateModified = DateTime.Now;
+                            //    //save to object
+
+                            //    //save to database
+                            //    cartExists.TrySave(typeof(CartList));
+
+                            //    //add to cart item
+                            //    cartItem.ProductId = ProdSaveToBasket.ProductID;
+                            //    cartItem.ProductName = ProdSaveToBasket.ProductName;
+                            //    cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
+                            //    cartItem.CartID = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault().CartID;
+                            //    cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
+                            //    cartItem.Price = ProdSaveToBasket.Price;
+                            //    cartItem.Quantity = productCount;
+                            //    cartItem.Value = productCount * ProdSaveToBasket.Price;
+                            //    //save to object
+                            //    cartItemList.Add(cartItem);
+
+                            //    //save to database
+                            //    cartItemList.Save();
+                            //    //subtract products from the database
+                            //    ProductSubtract(Convert.ToInt32(cartItem.ProductId), productCount);
+                            //}
 
                             // check if the cart to be added exists in the cartItem, if exists update the product
                             // alse edit the cart quantity and total amount
@@ -186,8 +201,7 @@ namespace MEWeb.Products
                                 // update the cart quantity and total amount
                                 cartExists.Quantity += productCount;
                                 cartExists.TotalAmount = cartExists.TotalAmount + cartItemExists.Value;
-
-
+                                
                                 currentUserCartList.Add(cartExists);
                                 currentUserCartList.Save();
 
@@ -199,7 +213,7 @@ namespace MEWeb.Products
 
 
                                 //subtract products from the database
-                                ProductSubtract(Convert.ToInt32(cartItemExists.ProductId), productCount);
+                                ProductSubtract(ProductID, productCount);
 
 
                             }
