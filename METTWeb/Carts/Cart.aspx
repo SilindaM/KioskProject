@@ -127,6 +127,9 @@
 
                                                     //var orderQuantity = RightColContentDiv.Helpers.EditorFor(c => ViewModel.ItemQuantity);
                                                     //orderQuantity.AddClass("form-control marginBottom20 ");
+                                                        RightColContentDiv.Helpers.LabelFor(c => ViewModel.OrderTypeId);
+                                                        var ReleaseFromDateEditor = RightColContentDiv.Helpers.EditorFor(c => ViewModel.OrderTypeId);
+                                                        ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
 
                                                     var CompleteBtn = RightColContentDiv.Helpers.Button("Confirm ", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.save);
                                                     {
@@ -193,7 +196,7 @@
             });
         }
         var CompleteCart = function (obj) {
-            ViewModel.CallServerMethod("CompleteCart", {CartItemList: ViewModel.CartItemList.Serialise(), ShowLoadingBar: true }, function (result) {
+            ViewModel.CallServerMethod("CompleteCart", { CartItemList: ViewModel.CartItemList.Serialise(), orderTypeId: ViewModel.OrderTypeId(), ShowLoadingBar: true }, function (result) {
             if (result.Success) {
                             alert('Item Removed Successfully Successfully');
                             Singular.AddMessage(3, 'Save', 'Removed Successfully.').Fade(2000);

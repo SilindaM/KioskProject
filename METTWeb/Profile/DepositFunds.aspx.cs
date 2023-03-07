@@ -37,11 +37,33 @@ namespace MEWeb.Profile
         [WebCallable]
         public Result SaveBalance(AccountList Account)
         {
+
+            //new Transaction
+            MELib.Transactions.Transaction newTransaction = MELib.Transactions.Transaction.NewTransaction();
+
+            //new Transaction List
+            MELib.Transactions.TransactionList transactions = MELib.Transactions.TransactionList.NewTransactionList();
+
             Result result = new Result();
             var currentUser = MELib.Accounts.AccountList.GetAccountByID(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
             currentUser.UserID = Singular.Security.Security.CurrentIdentity.UserID;
             currentUser.Balance += Account.FirstOrDefault().Balance;
+
+
+            //create a new Transaction
+            // create new transaction
+            newTransaction.TransactionTypeID = 2;
+            newTransaction.UserID = currentUser.UserID;
+            newTransaction.CurrentBalance = currentUser.Balance;
+            newTransaction.NewBalance = currentUser.Balance + Account.FirstOrDefault().Balance;
+            //save the new transaction
+            transactions.Add(newTransaction);
+            transactions.Save();
+
+            //save the user Account
+
             currentUser.TrySave(typeof(AccountList));
+
             return result;
 
         }

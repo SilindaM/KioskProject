@@ -27,7 +27,7 @@ namespace MELib
                 {
                   return RegisterList<MELib.RO.ROMovieGenreList>(Misc.ContextType.Application, c => c.ROMovieGenreList, () => { return MELib.RO.ROMovieGenreList.GetROMovieGenreList(); });
                 }
-              }
+            }
             /// <summary>
             /// Gets cached ROMovieGenreList
             /// </summary>
@@ -35,9 +35,20 @@ namespace MELib
             {
                 get
                 {
-                    return RegisterList<MELib.RO.ROProductCategoryList>(Misc.ContextType.Application,c => ROProductCategoryList, () => { return MELib.RO.ROProductCategoryList.GetROProductCategoryList(); });
+                    return RegisterList<MELib.RO.ROProductCategoryList>(Misc.ContextType.Application, c => ROProductCategoryList, () => { return MELib.RO.ROProductCategoryList.GetROProductCategoryList(); });
                 }
             }
+            /// <summary>
+            /// Gets cached ROMovieGenreList
+            /// </summary>
+            public RO.ROOrderTypeList ROOrderTypeList
+            {
+                get
+                {
+                    return RegisterList<MELib.RO.ROOrderTypeList>(Misc.ContextType.Application, c => ROOrderTypeList, () => { return MELib.RO.ROOrderTypeList.GetROOrderTypeList(); });
+                }
+            }
+
         }
     }
 

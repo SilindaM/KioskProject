@@ -19,22 +19,10 @@
                {
                    var HomeContainer = PanelContainer.Helpers.DivC("tabs-container");
                    {
-                       var currentCart = HomeContainer.Helpers.DivC("col-md-12 text-right");
-                       {
-                           var quantity = 20;
-                           var btnView = currentCart.Helpers.Button("${`quantity`}", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.shoppingBasket);
-                           {
-                               btnView.AddClass("btn btn-success btn-outline");
-                               btnView.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewBasket()");
-                           }
-                       }
                        var AssessmentsTab = HomeContainer.Helpers.TabControl();
                        {
                            AssessmentsTab.Style.ClearBoth();
                            AssessmentsTab.AddClass("nav nav-tabs");
-
-
-
 
                            var HomeContainerTab = AssessmentsTab.AddTab("Products Table");
 
@@ -66,11 +54,11 @@
                                                    var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                    {
                                                        var ProductSection = ColContentDiv.Helpers.BootstrapTableFor<MELib.Products.Product>((c) => c.ProductList, false, false, "");
-                                                       // var CartList = ColContentDiv.Helpers.BootstrapTableFor<MELib.Carts.Cart>((ca) => ca.Cart, false, false, "");
+                                                       var CartList = ColContentDiv.Helpers.BootstrapTableFor<MELib.Carts.Cart>((ca) => ca.Cart, false, false, "");
                                                        {
 
                                                            var ProductListRow = ProductSection.FirstRow;
-                                                           // var CartListRow = CartList.FirstRow;
+                                                           var CartListRow = CartList.FirstRow;
                                                            ProductListRow.Style.BackgroundColour = "#1000";
 
                                                            {
@@ -93,8 +81,7 @@
                                                                var CartQuantity = ProductListRow.AddColumn("Quantity");
                                                                {
                                                                    var Quantity = CartQuantity.Helpers.EditorFor(c => c.ProductQuantity);
-
-                                                                   Quantity.Style.FontSize = "15px";
+                                                                   Quantity.Style.Width = "40px";
                                                                }
 
                                                                var Action = ProductListRow.AddColumn("Purchase");
@@ -103,10 +90,12 @@
                                                                    {
                                                                        BuyBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "AddToBasket($data)");
                                                                        BuyBtn.AddClass("btn btn-primary btn-outline margin-to-10");
-                                                                       Action.Style.Width = "100px";
+                                                                       Action.Style.Width = "60px";
                                                                    }
                                                                }
+
                                                            }
+
                                                        }
                                                    }
                                                }
@@ -114,6 +103,66 @@
 
                                        }
                                    }
+
+                                   var RowColRight = Row.Helpers.DivC("col-md-3");
+                                   {
+
+                                       var AnotherCardDivs = RowColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
+                                       {
+                                           var CardTitleDivs = AnotherCardDivs.Helpers.DivC("ibox-title");
+                                           {
+                                               CardTitleDivs.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
+                                               CardTitleDivs.Helpers.HTML().Heading5("Filter Criteria");
+                                           }
+                                           var CardTitleToolsDivs = CardTitleDivs.Helpers.DivC("ibox-tools");
+                                           {
+                                               var aToolsTag = CardTitleToolsDivs.Helpers.HTMLTag("a");
+                                               aToolsTag.AddClass("collapse-link");
+                                               {
+                                                   var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
+                                                   iToolsTag.AddClass("fa fa-chevron-up");
+                                               }
+                                           }
+                                           var ContentDivs = AnotherCardDivs.Helpers.DivC("ibox-content");
+                                           {
+                                               var RightRowContentDiv = ContentDivs.Helpers.DivC("row");
+                                               {
+                                                   var RightColContentDiv = RightRowContentDiv.Helpers.DivC("col-md-12");
+                                                   {
+                                                       var ViewCart = RightColContentDiv.Helpers.Button("View Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.shoppingBasket);
+                                                       {
+                                                           
+                                                                   ViewCart.Style.Width = "100%";
+                                                                   ViewCart.AddClass("form-control marginBottom20 ");
+                                                           var ViewCartButton =  ViewCart.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                           {
+                                                                   ViewCartButton.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewBasket()");
+                                                                   ViewCartButton.AddClass("btn btn-success");
+                                                                   ViewCartButton.Style.Width = "100%";
+                                                                   ViewCartButton.AddClass("form-control marginBottom20 ");
+                                                           }
+                                                       }
+
+                                                       var ReleaseFromDateLAbel = RightColContentDiv.Helpers.LabelFor(c => ViewModel.ProductCategoryId);
+                                                       var ReleaseFromDateEditor = RightColContentDiv.Helpers.EditorFor(c => ViewModel.ProductCategoryId);
+                                                       ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
+
+                                                       var FilterBtn = RightColContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       {
+                                                           FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterMo($data)");
+                                                           FilterBtn.AddClass("btn btn-primary btn-outline");
+                                                       }
+                                                       var ResetBtn = RightColContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       {
+                                                           ResetBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterReset($data)");
+                                                           ResetBtn.AddClass("btn btn-primary btn-outline");
+                                                       }
+                                                   }
+                                               }
+                                           }
+                                       }
+                                   }
+
                                }
                            }
                        }
@@ -135,8 +184,6 @@
               if (result.Success) {
                   alert('Added To Cart Successfully');
                    Singular.AddMessage(3, 'Save', 'Added Successfully.').Fade(2000);
-
-
               }
               else {
                   Singular.AddMessage(1, 'Error', result.ErrorText).Fade(2000);
@@ -147,6 +194,17 @@
       var ViewBasket = function () {
           window.location = '../Carts/Cart.aspx';
       }
+      var FilterProducts = function (obj) {
+      ViewModel.CallServerMethod('FilterProducts', { ProductCategoryId: obj.ProductCategoryId(), ShowLoadingBar: true }, function (result) {
+        if (result.Success) {
+          MEHelpers.Notification("Movies filtered successfully.", 'center', 'info', 1000);
+          ViewModel.MovieList.Set(result.Data);
+        }
+        else {
+          MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+        }
+      })
+    };
       
   </script>
 

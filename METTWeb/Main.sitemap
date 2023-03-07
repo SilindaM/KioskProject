@@ -9,17 +9,18 @@
       <siteMapNode title="Latest Releases" roles="Movies.Access" url="~/Movies/LatestReleases.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
       <siteMapNode title="All Movies" roles="Movies.Access" url="~/Movies/Movies.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
     </siteMapNode>
-    
-    
-    <siteMapNode title="Products" roles="Products.Access" description="fa fa-file-o fa-lg fa-fw">
-      <siteMapNode title="All Products" roles="Movies.Access" url="~/Products/Products.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
-       </siteMapNode>
+
+
+    <siteMapNode title="Products" roles="About.Access" description="fa fa-file-o fa-lg fa-fw">
+      <siteMapNode title="All Products" roles="About.Access" url="~/Products/Products.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
+    </siteMapNode>
     
 
     <siteMapNode title="My Account" roles="Account.Access" description="fa fa-user fa-lg fa-fw">
       <siteMapNode title="Profile" roles="Account.Access" url="~/Profile/Profile.aspx" description="fa fa-user fa-lg fa-fw" ></siteMapNode>
       <siteMapNode title="View Transactions" roles="Account.Access" url="~/Profile/Transactions.aspx" description="fa fa-table fa-lg fa-fw" ></siteMapNode>
       <siteMapNode title="Deposit Funds" roles ="Account.Access" url="~/Profile/DepositFunds.aspx" description="fa fa-money fa-lg fa-fw"></siteMapNode>
+      <siteMapNode title="View Orders" roles ="Account.Access" url="~/Orders/Orders.aspx" description="fas fa-cart-arrow-down fa-lg fa-fw"></siteMapNode>
     </siteMapNode>
 
     <siteMapNode title="General" roles="About.Access" description="fa fa-file-o fa-lg fa-fw">

@@ -1,9 +1,11 @@
 ﻿using MELib.Accounts;
 using MELib.Carts;
+using MELib.Orders;
 using MELib.Products;
 using Singular.Web;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -18,7 +20,10 @@ namespace MEWeb.Carts
     {
         public MELib.Carts.CartItemList CartItemList { get; set; }
         public MELib.Products.ProductList ProductList { get; set; }
+        public MELib.Transactions.TransactionList TransactionList { get; set; }
+        public MELib.Transactions.TransactionTypeList TransactionTypeList { get; set; }
         public MELib.Carts.CartList cartList { get; set; }
+        public MELib.Orders.OrderTypeList orderTypes { get; set; }
         public MELib.Carts.CartItem CartItem { get; set; }
         public MELib.Carts.Cart Cart { get; set; }
         public MELib.Orders.OrderList OrderList { get; set; }
@@ -31,6 +36,13 @@ namespace MEWeb.Carts
         public int? AccountID { get; set; }
 
 
+
+        /// <summary>
+        /// Gets or sets the Movie Genre ID
+        /// </summary>
+        [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROOrderTypeList), UnselectedText = "Select", ValueMember = "OrderTypeId", DisplayMember = "OrderType")]
+        [Display(Name = "OrderType")]
+        public int OrderTypeId { get; set; }
         public int testRotal { get; set; } = 0;
         public CartVM()
         {
@@ -39,6 +51,7 @@ namespace MEWeb.Carts
         protected override void Setup()
         {
             base.Setup();
+            orderTypes = MELib.Orders.OrderTypeList.GetOrderTypeList();
             var cartById = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
 
             var cartId = cartById.FirstOrDefault().CartID;
@@ -49,6 +62,7 @@ namespace MEWeb.Carts
             UpdateAccount = MELib.Accounts.AccountList.GetAccountList();
             Deposit = UpdateAccount.FirstOrDefault();
             cartList = MELib.Carts.CartList.GetCartList();
+            TransactionTypeList = MELib.Transactions.TransactionTypeList.GetTransactionTypeList();
 
 
             //  totalQuantity = CartList.FirstOrDefault().Quantity;
@@ -198,25 +212,26 @@ namespace MEWeb.Carts
                     //get the new product count in the cart
                     var newQuantity = cartItems.Quantity - productCount;
 
+
                     // if the old cartItem product is greater than the new quantity,  then return the products to the stock, 
                     // also decrease cart Item Quantity
-                    if (cartItems.Quantity > productCount)
+                    if (cartItems.Quantity > productCount && productCount > 0)
                     {
                         // return the items in the stock
                         ProductAddition(Convert.ToInt32(cartItems.ProductId), newQuantity);
                         //decrease the cartitem 
-                        cartItems.Quantity -= productCount;
+                        cartItems.Quantity = productCount;
                         //decrease the price of the cart amount
-                        cartItems.Value -= productCount * products.Price;
+                        cartItems.Value = productCount * products.Price;
                         //save the cart Item
                         cartItemList.Add(cartItems);
                         cartItemList.Save();
 
 
                         //decrease the cart quantity
-                        userCart.Quantity -= cartItems.Quantity;
+                        userCart.Quantity -= newQuantity;
                         //decrease the cart total amount
-                        userCart.TotalAmount -= productCount * products.Price;
+                        userCart.TotalAmount -= newQuantity * products.Price;
                         //save the update in the users cart
                         cartList.Add(userCart);
                         cartList.Save();
@@ -231,11 +246,11 @@ namespace MEWeb.Carts
                         var UpdateQuantity = productCount - cartItems.Quantity ;
 
                         // return the items in the stock
-                            ProductSubtraction(Convert.ToInt32(cartItems.ProductId), UpdateQuantity);
+                            ProductSubtraction(Convert.ToInt32(cartItems.ProductId), productCount);
                             //increase the cartitem 
-                            cartItems.Quantity += UpdateQuantity;
+                            cartItems.Quantity = productCount;
                             //increase the price of the cart amount
-                            cartItems.Value += UpdateQuantity * products.Price;
+                            cartItems.Value = productCount * products.Price;
                             //save the cart Item
                             cartItemList.Add(cartItems);
                             cartItemList.Save();
@@ -249,6 +264,13 @@ namespace MEWeb.Carts
                             cartList.Add(userCart);
                             cartList.Save();
                     }
+                    
+                    // check if the product is not less than 0
+                    else
+                    {
+                        result.Success = false;
+                        result.ErrorText = "Sorry only " + products.ProductQuantity.ToString() + " cannot be 0 or less than";
+                    }
                 }
             }
 
@@ -260,7 +282,7 @@ namespace MEWeb.Carts
             return result;
         }
         //confirm the cart
-        public static Result CompleteCart(CartItemList CartItemList)
+        public static Result CompleteCart(CartItemList CartItemList,int orderTypeId)
         {
             //get the current user
             var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
@@ -273,29 +295,128 @@ namespace MEWeb.Carts
             //create single order
             MELib.Orders.Order newOrder = MELib.Orders.Order.NewOrder();
 
+            //create newOrderDetailsList
+            MELib.Orders.OrderDetailList newOrderDetailsList = MELib.Orders.OrderDetailList.NewOrderDetailList();
+            //create single order
+            MELib.Orders.OrderDetail newOrderDetail = MELib.Orders.OrderDetail.NewOrderDetail();
+
+
+
+            //new Transaction
+            MELib.Transactions.Transaction newTransaction = MELib.Transactions.Transaction.NewTransaction();
+
+            //new Transaction List
+            MELib.Transactions.TransactionList transactions = MELib.Transactions.TransactionList.NewTransactionList();
+
+            // 
+            MELib.Accounts.AccountList userAccount = MELib.Accounts.AccountList.GetAccountByID(currentuser);
+            //get the account
+            var account = userAccount.FirstOrDefault();
+
+            //transaction type
+            var transtype = MELib.Transactions.TransactionTypeList.GetTransactionTypeList().FirstOrDefault();
+
+
+            //get all orderTypes
+
             // get the cart items
             // var cartItems = MELib.Carts.CartItemList.GetCartItemByCartItemId(Convert.ToInt32(CartItemID)).FirstOrDefault();
 
+            // get the order
+            MELib.Orders.OrderTypeList orderTypes= MELib.Orders.OrderTypeList.GetOrderTypeById(orderTypeId);
+
+            var orderType = orderTypes.FirstOrDefault();
+
             //cart total amount
             var TotalAmount = userCart.TotalAmount;
+            
 
             Result result = new Result();
             try
             {
                 // make subtraction from the user's account
-                AmountDeduction(currentuser, TotalAmount);
-                //update the cart
-                userCart.TrySave(typeof(CartList));
+                //check if user has sufficient amount, and not a delivery
+                if (TotalAmount <= account.Balance && (orderTypeId != 1) && (account.Balance != 0))
+                {
+                    AmountDeduction(currentuser, TotalAmount);
+                    //update the cart
+                    userCart.TrySave(typeof(CartList));
 
-                //Create New Order
-                newOrder.UserID =currentuser;
-                newOrder.OrderedDate = DateTime.Now;
-                newOrder.CartID = userCart.CartID;
-                newOrder.CompletedBy = currentuser;
-                newOrder.OrderAmount = TotalAmount;
-                //save to the ordersList
-                newOrdersList.Add(newOrder);
-                newOrdersList.Save();
+                    //Create New Order
+                    newOrder.UserID = currentuser;
+                    newOrder.OrderedDate = DateTime.Now;
+                    newOrder.CartID = userCart.CartID;
+                    newOrder.CompletedBy = currentuser;
+                    newOrder.OrderTypeId = orderTypeId;
+
+                    // create new transaction
+                    newTransaction.TransactionTypeID = 3;
+                    newTransaction.UserID = currentuser;
+                    newTransaction.CurrentBalance = account.Balance;
+
+
+                    // check if order Type is Collection or delivery
+                    // add the delivery fee to the total Amount
+                    if (orderTypeId == 1)
+                    {
+                        //orderAmount
+                        var orderAmount = TotalAmount + orderType.amount;
+
+                        newOrder.OrderAmount = orderAmount;
+                        newTransaction.Amount = orderAmount;
+                        newTransaction.NewBalance = account.Balance - orderAmount;
+                    }
+                    //if is collection don't add delivery fee
+                    else
+                    {
+                        newOrder.OrderAmount = TotalAmount;
+                        newTransaction.Amount = TotalAmount;
+                        newTransaction.NewBalance = account.Balance - TotalAmount;
+                    }
+                    //save transaction
+                    transactions.Add(newTransaction);
+                    transactions.Save();
+
+                    // newOrder.OrderTypeId =
+                    //save to the ordersList
+                    newOrdersList.Add(newOrder);
+                    newOrdersList.Save();
+                    MELib.Orders.Order OrdersList = MELib.Orders.OrderList.GetOrderList().LastOrDefault();
+                    var orderid = OrdersList.OrderID;
+                    //create order details
+                    foreach (var od in CartItemList)
+                    {
+                        newOrderDetail.OrderId = orderid;
+                        newOrderDetail.ProductDescription = od.ProductDescription;
+                        newOrderDetail.ProductImage = od.ProductImage;
+                        newOrderDetail.ProductName = od.ProductName;
+                        newOrderDetail.Price = od.Price;
+                        newOrderDetail.Quantity = od.Quantity;
+                        newOrderDetail.Value = od.Value;
+                        newOrderDetail.ProductId = od.ProductId;
+                        newOrderDetail.DateCreated = DateTime.Now;
+
+                        //save the order Details
+                        newOrderDetailsList.Add(newOrderDetail);
+                        newOrderDetailsList.Save();
+                    }
+
+
+                    //clear the cart
+                    // clear cart item
+                    CartItemList.Clear();
+                    //save the cart item, cartItem now is empty;
+                    CartItemList.Save();
+
+                    //update the cart
+                    userCart.TotalAmount = 0;
+                    userCart.Quantity = 0;
+                    userCart.TrySave(typeof(CartList));
+                 }
+                else
+                {
+                    result.ErrorText = "Insufficient Amount";
+                }
             }
             catch (Exception e)
             {
@@ -402,6 +523,35 @@ namespace MEWeb.Carts
             }
             return result;
         }
+
+        //// get orderType 
+        //[WebCallable]
+        //public Result OrderType(int OrderTypeId, int ResetInd)
+        //{
+        //    Result result = new Result();
+        //    try
+        //    {
+        //        if(ResetInd ==0)
+        //        {
+        //            MELib.Orders.OrderList OrderList = MELib.Orders.OrderList.Get(OrderTypeId);
+        //            result.Data = OrderList;
+        //        }
+        //        else
+        //        {
+        //            MELib.Orders.OrderList OrderList = MELib.Orders.OrderList.GetOrderList();
+        //            result.Data = OrderList;
+        //        }
+        //        result.Success = true;
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        WebError.LogError(e, "Page: LatestReleases.aspx | Method: FilterMovies", $"(int OrderTypeId, ({OrderTypeId})");
+        //        result.Data = e.InnerException;
+        //        result.ErrorText = "Could not filter movies by category.";
+        //        result.Success = false;
+        //    }
+        //    return result;
+        //}
     }
 }
 

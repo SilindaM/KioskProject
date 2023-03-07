@@ -140,6 +140,7 @@
     <Content Include="Movies\LatestReleases.aspx" />
     <Content Include="Movies\Movie.aspx" />
     <Content Include="Movies\Movies.aspx" />
+    <Content Include="Orders\Orders.aspx" />
     <Content Include="Overview\Database.aspx" />
     <Content Include="Overview\Library.aspx" />
     <Content Include="Overview\CSLA.aspx" />
@@ -482,6 +483,13 @@
     </Compile>
     <Compile Include="Movies\Movies.aspx.designer.cs">
       <DependentUpon>Movies.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Orders\Orders.aspx.cs">
+      <DependentUpon>Orders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Orders\Orders.aspx.designer.cs">
+      <DependentUpon>Orders.aspx</DependentUpon>
     </Compile>
     <Compile Include="Overview\Database.aspx.cs">
       <DependentUpon>Database.aspx</DependentUpon>

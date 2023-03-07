@@ -25,6 +25,8 @@ namespace MEWeb.Products
         public int UserID { get; set; }
         public int ProductID { get; set; }
         public int CartID { get; set; }
+        public String ProductName { get; set; }
+        public int ProductQuantity { get; set; }
 
 
         /// <summary>
@@ -41,26 +43,47 @@ namespace MEWeb.Products
         protected override void Setup()
         {
             base.Setup();
-
             ProductList = MELib.Products.ProductList.GetProductList();
             CartList = MELib.Carts.CartList.GetCartList();
             CartItemList = MELib.Carts.CartItemList.GetCartItemList();
         }
 
+        //filter product category 
         [WebCallable]
-        public Result FilterProducts(int ProductCategoryId)
+        public Result FilterProducts(int ProductCategoryID, int ResetInd)
         {
             Result sr = new Result();
             try
             {
-                sr.Data = MELib.Products.ProductList.GetProductList(ProductCategoryId);
+                // Filter products by category ID 1
+                Result result = FilterProducts(1, 0);
+                if (result.Success)
+                {
+                    MELib.Products.ProductList productList = (MELib.Products.ProductList)result.Data;
+                    // Do something with the filtered product list
+                }
+                else
+                {
+                    string errorMessage = result.ErrorText;
+                    // Handle the error
+                }
+                if (ResetInd == 0)
+                {
+                    MELib.Products.ProductList ProductList = MELib.Products.ProductList.GetProductList(ProductCategoryID);
+                    sr.Data = ProductList;
+                }
+                else
+                {
+                    MELib.Products.ProductList ProductList = MELib.Products.ProductList.GetProductList();
+                    sr.Data = ProductList;
+                }
                 sr.Success = true;
             }
             catch (Exception e)
             {
-                WebError.LogError(e, "Page: products.aspx | Method: FilterProductCategory", $"(int ProductCategoryId, ({ProductCategoryId})");
+                WebError.LogError(e, "Page: Products.aspx | Method: FilterProducts", $"(int ProductCategoryID, ({ProductCategoryID})");
                 sr.Data = e.InnerException;
-                sr.ErrorText = "Could not filter products by category.";
+                sr.ErrorText = "Could not filter Products by category.";
                 sr.Success = false;
             }
             return sr;
@@ -244,7 +267,7 @@ namespace MEWeb.Products
 
 
                                 //subtract products from the database
-                                ProductSubtract(Convert.ToInt32(cartItemExists.ProductId), productCount);
+                                ProductSubtract(ProductID, productCount);
 
                             }
                         }
