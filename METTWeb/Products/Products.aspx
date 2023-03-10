@@ -62,6 +62,13 @@
                                                            ProductListRow.Style.BackgroundColour = "#1000";
 
                                                            {
+
+
+                                                               var ViewCart = ProductListRow.Helpers.Button("View Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                               {
+                                                                   ViewCart.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewCart($data)");
+                                                                   ViewCart.AddClass("btn btn-primary btn-outline");
+                                                               }
                                                                var ProductTitle = ProductListRow.AddColumn("Product Name");
                                                                {
                                                                    var productNameText = ProductTitle.Helpers.Span(c => c.ProductName);
@@ -78,6 +85,7 @@
                                                                    var Price = ProductPrice.Helpers.Span(c => "R " + c.Price);
                                                                    Price.Style.FontSize = "15px";
                                                                }
+                                                               
                                                                var CartQuantity = ProductListRow.AddColumn("Quantity");
                                                                {
                                                                    var Quantity = CartQuantity.Helpers.EditorFor(c => c.ProductQuantity);
@@ -104,55 +112,58 @@
                                        }
                                    }
 
+
                                    var RowColRight = Row.Helpers.DivC("col-md-3");
                                    {
 
-                                       var AnotherCardDivs = RowColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
+                                       var AnotherCardDiv = RowColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
                                        {
-                                           var CardTitleDivs = AnotherCardDivs.Helpers.DivC("ibox-title");
+                                           var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
                                            {
-                                               CardTitleDivs.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
-                                               CardTitleDivs.Helpers.HTML().Heading5("Filter Criteria");
+                                               CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
+                                               CardTitleDiv.Helpers.HTML().Heading5("Filter Criteria");
                                            }
-                                           var CardTitleToolsDivs = CardTitleDivs.Helpers.DivC("ibox-tools");
+                                           var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
                                            {
-                                               var aToolsTag = CardTitleToolsDivs.Helpers.HTMLTag("a");
+                                               var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
                                                aToolsTag.AddClass("collapse-link");
                                                {
                                                    var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
                                                    iToolsTag.AddClass("fa fa-chevron-up");
                                                }
                                            }
-                                           var ContentDivs = AnotherCardDivs.Helpers.DivC("ibox-content");
+                                           var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
                                            {
-                                               var RightRowContentDiv = ContentDivs.Helpers.DivC("row");
+                                               var RowContentDiv = ContentDiv.Helpers.DivC("row");
                                                {
-                                                   var RightColContentDiv = RightRowContentDiv.Helpers.DivC("col-md-12");
+                                                   var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                    {
-                                                       var ViewCart = RightColContentDiv.Helpers.Button("View Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.shoppingBasket);
-                                                       {
-                                                           
-                                                                   ViewCart.Style.Width = "100%";
-                                                                   ViewCart.AddClass("form-control marginBottom20 ");
-                                                           var ViewCartButton =  ViewCart.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                           var ProductCartLeft = ColContentDiv.Helpers.DivC("col-md-6");
                                                            {
-                                                                   ViewCartButton.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewBasket()");
-                                                                   ViewCartButton.AddClass("btn btn-success");
-                                                                   ViewCartButton.Style.Width = "100%";
-                                                                   ViewCartButton.AddClass("form-control marginBottom20 ");
+                                                               var FilterBtn = ProductCartLeft.Helpers.Button("View Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.cart_arrow_down);
+                                                               {
+                                                                   FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewCart()");
+                                                                   FilterBtn.AddClass("btn btn-primary btn-outline  marginBottom20  ");
+                                                               }
                                                            }
-                                                       }
 
-                                                       var ReleaseFromDateLAbel = RightColContentDiv.Helpers.LabelFor(c => ViewModel.ProductCategoryId);
-                                                       var ReleaseFromDateEditor = RightColContentDiv.Helpers.EditorFor(c => ViewModel.ProductCategoryId);
+                                                           var ProductCartRight = ColContentDiv.Helpers.DivC("col-md-6");
+                                                           {
+                                                               ProductCartRight.Helpers.LabelFor(c => "Cart Quantity" + c.CartID);
+                                                           }
+                                                   }
+                                                   var MovieGenreContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
+                                                   {
+
+                                                       var ReleaseFromDateEditor = MovieGenreContentDiv.Helpers.EditorFor(c => ViewModel.ProductCategoryId);
                                                        ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
 
-                                                       var FilterBtn = RightColContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       var FilterBtn = MovieGenreContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
                                                        {
-                                                           FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterMo($data)");
+                                                           FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterProducts($data)");
                                                            FilterBtn.AddClass("btn btn-primary btn-outline");
                                                        }
-                                                       var ResetBtn = RightColContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       var ResetBtn = MovieGenreContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
                                                        {
                                                            ResetBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterReset($data)");
                                                            ResetBtn.AddClass("btn btn-primary btn-outline");
@@ -182,29 +193,43 @@
       var AddToBasket = function (obj) {
           ViewModel.CallServerMethod("AddToBasket", { ProductID: obj.ProductID(), productCount: obj.ProductQuantity(),ProductList: ViewModel.ProductList.Serialise() ,ShowLoadingBar: true }, function (result) {
               if (result.Success) {
-                  alert('Added To Cart Successfully');
+                 MEHelpers.Notification("Product Added TO Cart", 'center', 'warning', 5000);
                    Singular.AddMessage(3, 'Save', 'Added Successfully.').Fade(2000);
               }
               else {
                   Singular.AddMessage(1, 'Error', result.ErrorText).Fade(2000);
-                  // MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+                 MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
               }
           });
       }
-      var ViewBasket = function () {
+      var ViewCart = function () {
           window.location = '../Carts/Cart.aspx';
       }
       var FilterProducts = function (obj) {
-      ViewModel.CallServerMethod('FilterProducts', { ProductCategoryId: obj.ProductCategoryId(), ShowLoadingBar: true }, function (result) {
+      ViewModel.CallServerMethod('FilterProducts', { ProductCategoryId: obj.ProductCategoryId(), ResetInd: 0, ShowLoadingBar: true }, function (result) {
         if (result.Success) {
-          MEHelpers.Notification("Movies filtered successfully.", 'center', 'info', 1000);
-          ViewModel.MovieList.Set(result.Data);
+            MEHelpers.Notification("Products filtered successfully.", 'center', 'info', 1000);
+            ViewModel.ProductList.Set(result.Data);
         }
         else {
           MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
         }
       })
     };
+
+    var FilterReset = function (obj) {
+      ViewModel.CallServerMethod('FilterProducts', { ProductCategoryId: obj.ProductCategoryId(), ResetInd: 1, ShowLoadingBar: true }, function (result) {
+        if (result.Success) {
+          MEHelpers.Notification("Products reset successfully.", 'center', 'info', 1000);
+            ViewModel.ProductList.Set(result.Data);
+          // Set Drop Down to 'Select'
+        }
+        else {
+          MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+        }
+      })
+    };
+
       
   </script>
 

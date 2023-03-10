@@ -12,8 +12,8 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
   <%
-    using (var h = this.Helpers)
-    {
+      using (var h = this.Helpers)
+      {
       var MainContent = h.DivC("row pad-top-10");
       {
         var MainContainer = MainContent.Helpers.DivC("col-md-12 p-n-lr");
@@ -24,36 +24,40 @@
             {
               PageTab.Style.ClearBoth();
               PageTab.AddClass("nav nav-tabs");
-              var ContainerTab = PageTab.AddTab("Transaction History");
+              var ContainerTab = PageTab.AddTab("Transaction List");
               {
                 var RowContentDiv = ContainerTab.Helpers.DivC("row");
                 {
-
-                  #region Left Column / Data
-                  var LeftColRight = RowContentDiv.Helpers.DivC("col-md-9");
+                  var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-9");
                   {
-
-                    var AnotherCardDiv = LeftColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
+                    var MoviesDiv = ColContentDiv.Helpers.BootstrapTableFor<MELib.RO.Transaction>((c) => c.TransactionList, false, false, "");
                     {
-                      var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
+                      var FirstRow = MoviesDiv.FirstRow;
                       {
-                        CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
-                        CardTitleDiv.Helpers.HTML().Heading5("Transactions");
-                      }
-                      var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
-                      {
-                        var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
-                        aToolsTag.AddClass("collapse-link");
+                        var MovieTitle = FirstRow.AddColumn("TransactionID");
                         {
-                          var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
-                          iToolsTag.AddClass("fa fa-chevron-up");
+                          var MovieTitleText = MovieTitle.Helpers.Span(c => c.TransactionID);
+                          MovieTitle.Style.Width = "250px";
+                        }
+                        var MovieDescription = FirstRow.AddColumn("Transaction Type");
+                        {
+                          var MovieDescriptionText = MovieDescription.Helpers.Span(c => c.Description);
+                        }
+                        var TransactionAmount = FirstRow.AddColumn("Transaction Amount");
+                        {
+                          var MovieDescriptionText = TransactionAmount.Helpers.Span(c => c.Amount);
+                        }
+                        var CurrentBalance = FirstRow.AddColumn("Transaction Amount");
+                        {
+                          var MovieDescriptionText = CurrentBalance.Helpers.Span(c => c.CurrentBalance);
+                        }
+                        var NewBalance = FirstRow.AddColumn("Transaction Amount");
+                        {
+                          var MovieDescriptionText = NewBalance.Helpers.Span(c => c.NewBalance);
                         }
                       }
                     }
                   }
-                  #endregion
-
-                  #region Right Column / Filters
                   var RowColRight = RowContentDiv.Helpers.DivC("col-md-3");
                   {
 
@@ -73,16 +77,38 @@
                           iToolsTag.AddClass("fa fa-chevron-up");
                         }
                       }
+                      var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
+                      {
+                        var RightRowContentDiv = ContentDiv.Helpers.DivC("row");
+                        {
+                          var RightColContentDiv = RightRowContentDiv.Helpers.DivC("col-md-12");
+                          {
+                            var ReleaseFromDateEditor = RightColContentDiv.Helpers.EditorFor(c => ViewModel.TransactionTypeId);
+                            ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
+
+                            var FilterBtn = RightColContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                            {
+                              FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterTransactions($data)");
+                              FilterBtn.AddClass("btn btn-primary btn-outline");
+                            }
+                                                        var ResetBtn = RightColContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       {
+                                                           ResetBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterReset($data)");
+                                                           ResetBtn.AddClass("btn btn-primary btn-outline");
+                                                       }
+
+                          }
+                        }
+                      }
                     }
                   }
-                  #endregion
                 }
               }
             }
           }
         }
       }
-    }
+      }
   %>
   <script type="text/javascript">
     // Place page specific JavaScript here or in a JS file and include in the HeadContent section
@@ -90,6 +116,30 @@
       $("#menuItem1").addClass('active');
       $("#menuItem1 > ul").addClass('in');
     });
+         var FilterTransactions = function (obj) {
+      ViewModel.CallServerMethod('FilterTransactions', { TransactionTypeId: obj.TransactionTypeId(), ResetInd: 0, ShowLoadingBar: true }, function (result) {
+        if (result.Success) {
+            MEHelpers.Notification("Products filtered successfully.", 'center', 'info', 1000);
+            ViewModel.TransactionList.Set(result.Data);
+        }
+        else {
+          MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+        }
+      })
+    };
+
+    var FilterReset = function (obj) {
+      ViewModel.CallServerMethod('FilterTransactions', { TransactionTypeId: obj.TransactionTypeId(), ResetInd: 1, ShowLoadingBar: true }, function (result) {
+        if (result.Success) {
+          MEHelpers.Notification("Products reset successfully.", 'center', 'info', 1000);
+            ViewModel.TransactionList.Set(result.Data);
+          // Set Drop Down to 'Select'
+        }
+        else {
+          MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+        }
+      })
+    };
 
 
   </script>

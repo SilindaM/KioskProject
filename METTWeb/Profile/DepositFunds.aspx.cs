@@ -19,6 +19,8 @@ namespace MEWeb.Profile
         public MELib.Accounts.AccountList DepositAccount { get; set; }
         public MELib.Accounts.Account Deposit { get; set; }
         public MELib.Transactions.TransactionList Transaction { get; set; }
+        public MELib.RO.TransactionTypeList TransactionTypesList { get; set; }
+
         public int? AccountID { get; set; }
 
         public decimal Money { get; set; }
@@ -44,6 +46,10 @@ namespace MEWeb.Profile
             //new Transaction List
             MELib.Transactions.TransactionList transactions = MELib.Transactions.TransactionList.NewTransactionList();
 
+            //transaction types
+            var TransactionTypesList = MELib.RO.TransactionTypeList.GetTransactionTypeList().ToList();
+
+
             Result result = new Result();
             var currentUser = MELib.Accounts.AccountList.GetAccountByID(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
             currentUser.UserID = Singular.Security.Security.CurrentIdentity.UserID;
@@ -56,6 +62,7 @@ namespace MEWeb.Profile
             newTransaction.UserID = currentUser.UserID;
             newTransaction.CurrentBalance = currentUser.Balance;
             newTransaction.NewBalance = currentUser.Balance + Account.FirstOrDefault().Balance;
+            newTransaction.Description = TransactionTypesList.Select(x => x.TransactionName).Skip(1).FirstOrDefault();
             //save the new transaction
             transactions.Add(newTransaction);
             transactions.Save();

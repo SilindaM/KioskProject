@@ -64,7 +64,7 @@
                         var EditCol = SubCategoriesFirstRow.AddColumn("Action");
                         {
                           // Specify the column width - this can be done in various ways, one example below;
-                          EditCol.Attributes.Add("style", "width:150px;text-align: center;");
+                         // EditCol.Attributes.Add("style", "width:150px;text-align: center;");
 
                           // Add Action Buttons Here
                           var EditBtn = EditCol.Helpers.Button("Edit", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);

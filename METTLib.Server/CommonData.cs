@@ -48,6 +48,37 @@ namespace MELib
                     return RegisterList<MELib.RO.ROOrderTypeList>(Misc.ContextType.Application, c => ROOrderTypeList, () => { return MELib.RO.ROOrderTypeList.GetROOrderTypeList(); });
                 }
             }
+            /// <summary>
+            /// Gets cached ROMovieGenreList
+            /// </summary>
+            public RO.TransactionTypeList TransactionTypeList
+            {
+                get
+                {
+                    return RegisterList<MELib.RO.TransactionTypeList>(Misc.ContextType.Application, c => TransactionTypeList, () => { return MELib.RO.TransactionTypeList.GetTransactionTypeList(); });
+                }
+            }
+
+            /// <summary>
+            /// Gets cached ROMovieGenreList
+            /// </summary>
+            public RO.TransactionList TransactionList
+            {
+                get
+                {
+                    return RegisterList<MELib.RO.TransactionList>(Misc.ContextType.Application, c => TransactionList, () => { return MELib.RO.TransactionList.GetTransactionList(); });
+                }
+            }
+            /// <summary>
+            /// Gets cached ROMovieGenreList
+            /// </summary>
+            public ProductCategory.ProductCategoryList ProductCategoryList
+            {
+                get
+                {
+                    return RegisterList<MELib.ProductCategory.ProductCategoryList>(Misc.ContextType.Application, c => ProductCategoryList, () => { return MELib.ProductCategory.ProductCategoryList.GetProductCategoryList(); });
+                }
+            }
 
         }
     }

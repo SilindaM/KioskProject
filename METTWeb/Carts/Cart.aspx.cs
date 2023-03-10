@@ -34,14 +34,16 @@ namespace MEWeb.Carts
         public MELib.Accounts.AccountList UpdateAccount { get; set; }
         public MELib.Accounts.Account Deposit { get; set; }
         public int? AccountID { get; set; }
+        public MELib.RO.TransactionTypeList TransactionTypesList { get; set; }
+
 
 
 
         /// <summary>
         /// Gets or sets the Movie Genre ID
         /// </summary>
-        [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROOrderTypeList), UnselectedText = "Select", ValueMember = "OrderTypeId", DisplayMember = "OrderType")]
-        [Display(Name = "OrderType")]
+        [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROOrderTypeList), UnselectedText = "Select", ValueMember = "OrderTypeId", DisplayMember = "OrderName")]
+        [Display(Name = "OrderName")]
         public int OrderTypeId { get; set; }
         public int testRotal { get; set; } = 0;
         public CartVM()
@@ -325,18 +327,28 @@ namespace MEWeb.Carts
             // get the order
             MELib.Orders.OrderTypeList orderTypes= MELib.Orders.OrderTypeList.GetOrderTypeById(orderTypeId);
 
+            //transaction types
+            var TransactionTypesList = MELib.RO.TransactionTypeList.GetTransactionTypeList().ToList();
+
+
             var orderType = orderTypes.FirstOrDefault();
 
             //cart total amount
             var TotalAmount = userCart.TotalAmount;
+
             
 
             Result result = new Result();
             try
             {
+                // check if the orderType its collection or delivery
+                if(orderTypeId ==1)
+                {
+                    TotalAmount =userCart.TotalAmount + orderType.amount;
+                }
                 // make subtraction from the user's account
                 //check if user has sufficient amount, and not a delivery
-                if (TotalAmount <= account.Balance && (orderTypeId != 1) && (account.Balance != 0))
+                if (TotalAmount <= account.Balance && (account.Balance != 0))
                 {
                     AmountDeduction(currentuser, TotalAmount);
                     //update the cart
@@ -353,6 +365,7 @@ namespace MEWeb.Carts
                     newTransaction.TransactionTypeID = 3;
                     newTransaction.UserID = currentuser;
                     newTransaction.CurrentBalance = account.Balance;
+                    newTransaction.Description = TransactionTypesList.Select(t => t.TransactionName).LastOrDefault();
 
 
                     // check if order Type is Collection or delivery
@@ -360,7 +373,7 @@ namespace MEWeb.Carts
                     if (orderTypeId == 1)
                     {
                         //orderAmount
-                        var orderAmount = TotalAmount + orderType.amount;
+                        var orderAmount = TotalAmount;
 
                         newOrder.OrderAmount = orderAmount;
                         newTransaction.Amount = orderAmount;
@@ -369,9 +382,9 @@ namespace MEWeb.Carts
                     //if is collection don't add delivery fee
                     else
                     {
-                        newOrder.OrderAmount = TotalAmount;
-                        newTransaction.Amount = TotalAmount;
-                        newTransaction.NewBalance = account.Balance - TotalAmount;
+                        newOrder.OrderAmount = userCart.TotalAmount;
+                        newTransaction.Amount = userCart.TotalAmount;
+                        newTransaction.NewBalance = account.Balance - userCart.TotalAmount;
                     }
                     //save transaction
                     transactions.Add(newTransaction);

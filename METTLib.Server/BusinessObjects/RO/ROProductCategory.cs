@@ -114,12 +114,12 @@ namespace MELib.RO
             get { return GetProperty(CreatedDateProperty); }
         }
 
-        public static PropertyInfo<int> IsActiveIndProperty = RegisterProperty<int>(c => c.IsActiveInd, "Is Active", 0);
+        public static PropertyInfo<Boolean> IsActiveIndProperty = RegisterProperty<Boolean>(c => c.IsActiveInd, "Is Active", 0);
         /// <summary>
         /// Gets the Is Active value
         /// </summary>
         [Display(Name = "Is Active", Description = "")]
-        public int IsActiveInd
+        public Boolean IsActiveInd
         {
             get { return GetProperty(IsActiveIndProperty); }
         }
@@ -163,7 +163,7 @@ namespace MELib.RO
             LoadProperty(DeletedDateProperty, sdr.GetValue(i++));
             LoadProperty(DeletedByProperty, sdr.GetInt32(i++));
             LoadProperty(CreatedDateProperty, sdr.GetSmartDate(i++));
-            LoadProperty(IsActiveIndProperty, sdr.GetInt32(i++));
+            LoadProperty(IsActiveIndProperty, sdr.GetBoolean(i++));
         }
 
         #endregion

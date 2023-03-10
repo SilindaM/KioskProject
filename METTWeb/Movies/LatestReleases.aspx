@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LatestReleases.aspx.cs" Inherits="MEWeb.Movies.LatestReleases" %>
+﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="LatestReleases.aspx.cs" Inherits="MEWeb.Movies.LatestReleases" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
   <!-- Add page specific styles and JavaScript classes below -->
@@ -101,7 +101,6 @@
                       }
                     }
                   }
-
                   var RowColRight = Row.Helpers.DivC("col-md-3");
                   {
 
@@ -171,9 +170,7 @@
       $("#menuItem1").addClass('active');
       $("#menuItem1 > ul").addClass('in');
     });
-
-
-
+      
     var RentMovie = function (obj) {
       ViewModel.CallServerMethod('RentMovie', { MovieID: obj.MovieID(), ShowLoadingBar: true }, function (result) {
         if (result.Success) {

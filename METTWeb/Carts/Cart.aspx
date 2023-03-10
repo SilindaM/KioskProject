@@ -14,14 +14,6 @@
                 {
                     var HomeContainer = PanelContainer.Helpers.DivC("tabs-container");
                     {
-                        var currentCart = HomeContainer.Helpers.DivC("col-md-12 text-right");
-                        {
-                            var btnView = currentCart.Helpers.Button("${`quantity`}", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.shoppingBasket);
-                            {
-                                btnView.AddClass("btn btn-success btn-outline");
-                                btnView.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewBasket()");
-                            }
-                        }
                         var AssessmentsTab = HomeContainer.Helpers.TabControl();
                         {
                             AssessmentsTab.Style.ClearBoth();

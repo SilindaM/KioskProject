@@ -27,13 +27,17 @@ namespace MEWeb.Products
         public int CartID { get; set; }
         public String ProductName { get; set; }
         public int ProductQuantity { get; set; }
+        public int Quantity { get; set; } 
 
 
         /// <summary>
         /// Gets or sets the Movie Genre ID
         /// </summary>
-        [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), UnselectedText = "Select", ValueMember = "MovieGenreID", DisplayMember = "Genre")]
-        [Display(Name = "ProductCategory")]
+        /// 
+
+
+        [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), UnselectedText = "Select", ValueMember = "ProductCategoryId", DisplayMember = "ProductCategoryName")]
+        [Display(Name = "ProductCategoryName")]
         public int? ProductCategoryId { get; set; }
 
         public ProductsVM()
@@ -50,40 +54,27 @@ namespace MEWeb.Products
 
         //filter product category 
         [WebCallable]
-        public Result FilterProducts(int ProductCategoryID, int ResetInd)
+        public Result FilterProducts(int ProductCategoryId,int ResetInd)
         {
             Result sr = new Result();
             try
             {
-                // Filter products by category ID 1
-                Result result = FilterProducts(1, 0);
-                if (result.Success)
+               if(ResetInd == 0)
                 {
-                    MELib.Products.ProductList productList = (MELib.Products.ProductList)result.Data;
-                    // Do something with the filtered product list
+                    sr.Data = MELib.Products.ProductList.GetProductByCategoryId(ProductCategoryId);
+                    sr.Success = true;
                 }
                 else
                 {
-                    string errorMessage = result.ErrorText;
-                    // Handle the error
+                    sr.Data = MELib.Products.ProductList.GetProductList();
+                    sr.Success = true;
                 }
-                if (ResetInd == 0)
-                {
-                    MELib.Products.ProductList ProductList = MELib.Products.ProductList.GetProductList(ProductCategoryID);
-                    sr.Data = ProductList;
-                }
-                else
-                {
-                    MELib.Products.ProductList ProductList = MELib.Products.ProductList.GetProductList();
-                    sr.Data = ProductList;
-                }
-                sr.Success = true;
             }
             catch (Exception e)
             {
-                WebError.LogError(e, "Page: Products.aspx | Method: FilterProducts", $"(int ProductCategoryID, ({ProductCategoryID})");
+                WebError.LogError(e, "Page: LatestReleases.aspx | Method: FilterProducts", $"(int ProductCategoryId, ({ProductCategoryId})");
                 sr.Data = e.InnerException;
-                sr.ErrorText = "Could not filter Products by category.";
+                sr.ErrorText = "Could not filter movies by category.";
                 sr.Success = false;
             }
             return sr;

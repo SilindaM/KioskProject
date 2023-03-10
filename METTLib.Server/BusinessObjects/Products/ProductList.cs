@@ -44,11 +44,15 @@ namespace MELib.Products
         public class Criteria
           : CriteriaBase<Criteria>
         {
-            public int? ProductCategoryId = null;
+            public int? ProductCategoryID = null;
             public int? ProductID ;
             public bool? IsActiveInd;
             public Criteria()
             {
+            }
+            public Criteria(int ProductCategoryID)
+            {
+                ProductCategoryID = ProductCategoryID;
             }
 
         }
@@ -71,7 +75,7 @@ namespace MELib.Products
         //get products by category
         public static ProductList GetProductCategory(int? ProductCategoryId)
         {
-            return DataPortal.Fetch<ProductList>(new Criteria { ProductCategoryId = ProductCategoryId });
+            return DataPortal.Fetch<ProductList>(new Criteria { ProductCategoryID = ProductCategoryId });
         }
 
 
@@ -81,9 +85,9 @@ namespace MELib.Products
             return DataPortal.Fetch<ProductList>(new Criteria { ProductID = ProductID });
         }
         //get products by id and is active
-        public static ProductList GetProductList(int? ProductID, bool isActiveInd)
+        public static ProductList GetProductByCategoryId(int? ProductCategoryId)
         {
-            return DataPortal.Fetch<ProductList>(new Criteria { ProductID = ProductID, IsActiveInd = isActiveInd });
+            return DataPortal.Fetch<ProductList>(new Criteria { ProductCategoryID = ProductCategoryId });
         }
 
         protected void Fetch(SafeDataReader sdr)
@@ -109,6 +113,7 @@ namespace MELib.Products
                         cm.CommandType = CommandType.StoredProcedure;
                         cm.CommandText = "GetProcs.getProductList";
                         cm.Parameters.AddWithValue("@ProductID", Singular.Misc.NothingDBNull(crit.ProductID));
+                        cm.Parameters.AddWithValue("@ProductCategoryID", Singular.Misc.NothingDBNull(crit.ProductCategoryID));
 
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
                         {

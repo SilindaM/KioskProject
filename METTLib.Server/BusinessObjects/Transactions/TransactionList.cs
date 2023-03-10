@@ -44,8 +44,14 @@ namespace MELib.Transactions
         public class Criteria
           : CriteriaBase<Criteria>
         {
+            public int? TransactionTypeId = null;
             public Criteria()
             {
+            }
+
+            public Criteria(int TransactionTypeId)
+            {
+                TransactionTypeId = TransactionTypeId;
             }
 
         }
@@ -63,6 +69,11 @@ namespace MELib.Transactions
         public static TransactionList GetTransactionList()
         {
             return DataPortal.Fetch<TransactionList>(new Criteria());
+        }
+
+        public static TransactionList GetTransactionByTransId(int? TransactionTypeId)
+        {
+            return DataPortal.Fetch<TransactionList>(new Criteria { TransactionTypeId = TransactionTypeId });
         }
 
         protected void Fetch(SafeDataReader sdr)
@@ -87,6 +98,7 @@ namespace MELib.Transactions
                     {
                         cm.CommandType = CommandType.StoredProcedure;
                         cm.CommandText = "GetProcs.getTransactionList";
+                        cm.Parameters.AddWithValue("@TransactionTypeId", Singular.Misc.NothingDBNull(crit.TransactionTypeId));
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
                         {
                             Fetch(sdr);

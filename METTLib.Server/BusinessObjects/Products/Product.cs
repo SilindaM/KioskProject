@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Singular;
 using System.Data;
 using System.Data.SqlClient;
-
+using MELib.ProductCategory;
 
 namespace MELib.Products
 {
@@ -20,7 +20,7 @@ namespace MELib.Products
         #region " Properties and Methods "
 
         #region " Properties "
-
+        
         public static PropertyInfo<int> ProductIDProperty = RegisterProperty<int>(c => c.ProductID, "ID", 0);
         /// <summary>
         /// Gets the ID value
@@ -33,12 +33,11 @@ namespace MELib.Products
 
         public static PropertyInfo<int> ProductCategoryIdProperty = RegisterProperty<int>(c => c.ProductCategoryId, "Product Category", 0);
         /// <summary>
-        /// Gets and sets the Product Category value
+        /// Gets and sets the Movie Genre value
         /// </summary>
-        [Display(Name = "Product Category", Description = "Foreign Key - Product Category ID"),
-        Required(ErrorMessage = "Product Category required"),
-        Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), ValueMember = "ProductCategoryId", DisplayMember = "Product Category")]
-        
+        [Display(Name = "Product Category", Description = "ProductCategory"),
+        Required(ErrorMessage = "Product Categoryrequired"),
+         Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), ValueMember = "ProductCategoryId", DisplayMember = "ProductCategoryName")]
         public int ProductCategoryId
         {
             get { return GetProperty(ProductCategoryIdProperty); }
