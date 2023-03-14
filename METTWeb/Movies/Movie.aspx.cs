@@ -17,16 +17,17 @@ namespace MEWeb.Movies
         public int MovieID { get; set; }
 
         public String MovieTitle { get; set; }
+        public String MovieDescription { get; set; }
 
-    public MovieVM()
+        public MovieVM()
     {
 
     }
     protected override void Setup()
     {
-      base.Setup();
-      MovieList = MELib.Movies.MovieList.GetMovieList();
+          base.Setup();
+          MovieList = MELib.Movies.MovieList.GetMovieList();
+    } 
     }
-  }
 }
 

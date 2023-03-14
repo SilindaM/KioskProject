@@ -97,7 +97,7 @@
                                                                    var BuyBtn = Action.Helpers.Button("Add To Basket", Singular.Web.ButtonMainStyle.Success, Singular.Web.ButtonSize.Tiny, Singular.Web.FontAwesomeIcon.cart_arrow_down);
                                                                    {
                                                                        BuyBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "AddToBasket($data)");
-                                                                       BuyBtn.AddClass("btn btn-primary btn-outline margin-to-10");
+                                                                       BuyBtn.AddClass("btn btn-primary btn-outline margin-top-10");
                                                                        Action.Style.Width = "60px";
                                                                    }
                                                                }
@@ -138,23 +138,14 @@
                                                {
                                                    var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                    {
-                                                           var ProductCartLeft = ColContentDiv.Helpers.DivC("col-md-6");
-                                                           {
-                                                               var FilterBtn = ProductCartLeft.Helpers.Button("View Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.cart_arrow_down);
+                                                               var FilterBtn = ColContentDiv.Helpers.Button("View Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.cart_arrow_down);
                                                                {
                                                                    FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewCart()");
-                                                                   FilterBtn.AddClass("btn btn-primary btn-outline  marginBottom20  ");
+                                                                   FilterBtn.AddClass("btn btn-primary btn-outline  marginBottom20  btn-block ");
                                                                }
-                                                           }
-
-                                                           var ProductCartRight = ColContentDiv.Helpers.DivC("col-md-6");
-                                                           {
-                                                               ProductCartRight.Helpers.LabelFor(c => "Cart Quantity" + c.CartID);
-                                                           }
                                                    }
                                                    var MovieGenreContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                    {
-
                                                        var ReleaseFromDateEditor = MovieGenreContentDiv.Helpers.EditorFor(c => ViewModel.ProductCategoryId);
                                                        ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
 

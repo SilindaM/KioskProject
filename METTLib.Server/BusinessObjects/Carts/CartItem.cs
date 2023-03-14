@@ -91,6 +91,18 @@ namespace MELib.Carts
             set { SetProperty(CartIDProperty, value); }
         }
 
+        public static PropertyInfo<Boolean> IsActiveIndProperty = RegisterProperty<Boolean>(c => c.IsActiveInd, "Is Active", false);
+        /// <summary>
+        /// Gets and sets the Is Active value
+        /// </summary>
+        [Display(Name = "Is Active", Description = "Indicator showing if the Movie is Active"),
+        Required(ErrorMessage = "Is Active required")]
+        public Boolean IsActiveInd
+        {
+            get { return GetProperty(IsActiveIndProperty); }
+            set { SetProperty(IsActiveIndProperty, value); }
+        }
+
         public static PropertyInfo<Decimal> PriceProperty = RegisterProperty<Decimal>(c => c.Price, "Price", 0D);
         /// <summary>
         /// Gets and sets the Price value
@@ -200,6 +212,7 @@ namespace MELib.Carts
                 int i = 0;
                 LoadProperty(CartItemIDProperty, sdr.GetInt32(i++));
                 LoadProperty(ProductIdProperty, Singular.Misc.ZeroNothing(sdr.GetInt32(i++)));
+                LoadProperty(IsActiveIndProperty, sdr.GetBoolean(i++));
                 LoadProperty(ProductNameProperty, sdr.GetString(i++));
                 LoadProperty(ProductImageProperty, sdr.GetString(i++));
                 LoadProperty(ProductDescriptionProperty, sdr.GetString(i++));
@@ -220,6 +233,7 @@ namespace MELib.Carts
 
             cm.Parameters.AddWithValue("@ProductId", GetProperty(ProductIdProperty));
             cm.Parameters.AddWithValue("@ProductName", GetProperty(ProductNameProperty));
+            cm.Parameters.AddWithValue("@IsActiveInd", GetProperty(IsActiveIndProperty));
             cm.Parameters.AddWithValue("@ProductImage", GetProperty(ProductImageProperty));
             cm.Parameters.AddWithValue("@ProductDescription", GetProperty(ProductDescriptionProperty));
             cm.Parameters.AddWithValue("@CartID", GetProperty(CartIDProperty));

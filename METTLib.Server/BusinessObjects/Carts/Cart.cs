@@ -236,12 +236,15 @@ namespace MELib.Carts
                 LoadProperty(CartIDProperty, sdr.GetInt32(i++));
                 LoadProperty(DateCreatedProperty, sdr.GetValue(i++));
                 LoadProperty(IsActiveIndProperty, sdr.GetBoolean(i++));
+
                 LoadProperty(ModifiedByProperty, sdr.GetInt32(i++));
                 LoadProperty(DateModifiedProperty, sdr.GetValue(i++));
                 LoadProperty(CreatedByProperty, sdr.GetInt32(i++));
+
                 LoadProperty(DeleteDateProperty, sdr.GetValue(i++));
                 LoadProperty(DeleteByProperty, sdr.GetInt32(i++));
                 LoadProperty(QuantityProperty, sdr.GetInt32(i++));
+
                 LoadProperty(TotalAmountProperty, sdr.GetDecimal(i++));
                 LoadProperty(UserIDProperty, Singular.Misc.ZeroNothing(sdr.GetInt32(i++)));
             }
@@ -260,9 +263,11 @@ namespace MELib.Carts
             cm.Parameters.AddWithValue("@DateCreated", DateCreated);
             cm.Parameters.AddWithValue("@IsActiveInd", GetProperty(IsActiveIndProperty));
             cm.Parameters.AddWithValue("@ModifiedBy", GetProperty(ModifiedByProperty));
+
             cm.Parameters.AddWithValue("@DateModified", Singular.Misc.NothingDBNull(DateModified));
             cm.Parameters.AddWithValue("@DeleteDate", Singular.Misc.NothingDBNull(DeleteDate));
             cm.Parameters.AddWithValue("@DeleteBy", GetProperty(DeleteByProperty));
+
             cm.Parameters.AddWithValue("@Quantity", GetProperty(QuantityProperty));
             cm.Parameters.AddWithValue("@TotalAmount", GetProperty(TotalAmountProperty));
             cm.Parameters.AddWithValue("@UserID", GetProperty(UserIDProperty));

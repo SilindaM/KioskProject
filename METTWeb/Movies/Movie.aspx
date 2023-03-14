@@ -60,11 +60,15 @@
                         {
                           var MovieDiv = MovieContentDiv.Helpers.DivC("col-md-12 text-center");
                           {   
-                            // Place holder
-                            MovieDiv.Helpers.HTML("<h1>{  Movie Title }</h1>");
-                            MovieDiv.Helpers.HTML("<h2>{ Movie Description }</h2>");
-                            MovieDiv.Helpers.HTML("<h3>Preview</h3>");
-                            MovieDiv.Helpers.HTML("<p></p>");
+                                                          // Place Content Here
+                                                          var MovieTitle = MovieDiv.Helpers.Span(c => "R " + c.MovieTitle);
+                                                          MovieTitle.Style.FontSize = "15px";
+                                                          MovieDiv.Helpers.HTMLTag("br");
+
+                                                          var Description = MovieDiv.Helpers.Span(c => ViewModel.MovieDescription);
+                                                          Description.Style.FontSize = "15px";
+                                                          MovieDiv.Helpers.HTMLTag("br");
+
                             var VideoContainer = MovieDiv.Helpers.HTMLTag("video controls");
                             {
                                VideoContainer.Helpers.HTML("<source src='../Media/Videos/Silver Fox Intro.mp4' type='video/mp4'>");

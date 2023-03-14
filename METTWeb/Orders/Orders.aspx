@@ -151,10 +151,11 @@
 
      
       var FilterOrders = function (obj) {
-      ViewModel.CallServerMethod('FilterOrders', { OrderTypeId: obj.OrderTypeId(), ResetInd: 0, ShowLoadingBar: true }, function (result) {
+          ViewModel.CallServerMethod('FilterOrders', { OrderTypeId: obj.OrderTypeId(), ResetInd: 0, OrderList: ViewModel.OrderList.Serialise(), ShowLoadingBar: true }, function (result) {
         if (result.Success) {
             MEHelpers.Notification("Products filtered successfully.", 'center', 'info', 1000);
             ViewModel.OrderList.Set(result.Data);
+            
         }
         else {
           MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);

@@ -46,7 +46,7 @@ namespace MEWeb.Orders
             {
                 if (ResetInd == 0)
                 {
-                    sr.Data = MELib.Orders.OrderList.GetOrderByType(OrderTypeId);
+                    sr.Data = MELib.RO.OrderList.GetOrderByOrderTypeId(OrderTypeId);
                     sr.Success = true;
                 }
                 else

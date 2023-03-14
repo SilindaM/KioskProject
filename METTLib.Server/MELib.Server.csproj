@@ -102,6 +102,8 @@
     <Compile Include="BusinessObjects\RO\TransactionList.cs" />
     <Compile Include="BusinessObjects\RO\TransactionType.cs" />
     <Compile Include="BusinessObjects\RO\TransactionTypeList.cs" />
+    <Compile Include="BusinessObjects\RO\User.cs" />
+    <Compile Include="BusinessObjects\RO\UserList.cs" />
     <Compile Include="BusinessObjects\Security\ROSecurityGroup.cs" />
     <Compile Include="BusinessObjects\Security\ROSecurityGroupList.cs" />
     <Compile Include="BusinessObjects\Security\ROUserPaged.cs" />

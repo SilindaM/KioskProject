@@ -51,7 +51,7 @@ namespace MEWeb.Profile
 
 
             Result result = new Result();
-            var currentUser = MELib.Accounts.AccountList.GetAccountByID(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
+            var currentUser = MELib.Accounts.AccountList.GetAccountList(Singular.Security.Security.CurrentIdentity.UserID).FirstOrDefault();
             currentUser.UserID = Singular.Security.Security.CurrentIdentity.UserID;
             currentUser.Balance += Account.FirstOrDefault().Balance;
 

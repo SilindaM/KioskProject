@@ -81,9 +81,11 @@ namespace MELib.RO
         {
             return DataPortal.Fetch<OrderList>(new Criteria());
         }
-        public static OrderList GetOrderByOrderTypeId(int OrderTypeId)
+        public static OrderList GetOrderByOrderTypeId(int? OrderTypeId)
         {
+            GetOrderList();
             return DataPortal.Fetch<OrderList>(new Criteria { OrderTypeID = OrderTypeId });
+
         }
         protected void Fetch(SafeDataReader sdr)
         {

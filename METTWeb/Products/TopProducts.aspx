@@ -26,6 +26,17 @@
     .caption {
       display: block;
       padding-bottom: 5px;
+      font-size : 20px;
+      background : #000000;
+      margin-right : 5px;
+      border-radius: 5px;
+      margin-left : 5px;
+    }
+    WatchBtn
+    {
+      margin-right : 5px;
+      margin-left : 5px;
+
     }
   </style>
 </asp:Content>
@@ -36,138 +47,129 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
   <%
-    using (var h = this.Helpers)
-    {
-      var MainHDiv = h.DivC("row pad-top-10");
+      using (var h = this.Helpers)
       {
-        var PanelContainer = MainHDiv.Helpers.DivC("col-md-12 p-n-lr");
-        {
-          var HomeContainer = PanelContainer.Helpers.DivC("tabs-container");
+          var MainHDiv = h.DivC("row pad-top-10");
           {
-            var AssessmentsTab = HomeContainer.Helpers.TabControl();
-            {
-              AssessmentsTab.Style.ClearBoth();
-              AssessmentsTab.AddClass("nav nav-tabs");
-              var HomeContainerTab = AssessmentsTab.AddTab("Home");
+              var PanelContainer = MainHDiv.Helpers.DivC("col-md-12 p-n-lr");
               {
-                var Row = HomeContainerTab.Helpers.DivC("row margin0");
-                {
-                  var RowColLeft = Row.Helpers.DivC("col-md-9");
+                  var HomeContainer = PanelContainer.Helpers.DivC("tabs-container");
                   {
-                    var AnotherCardDiv = RowColLeft.Helpers.DivC("ibox float-e-margins paddingBottom");
-                    {
-                      var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
+                      var AssessmentsTab = HomeContainer.Helpers.TabControl();
                       {
-                        CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
-                        CardTitleDiv.Helpers.HTML().Heading5("Latest Releases");
-                      }
-                      var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
-                      {
-                        var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
-                        aToolsTag.AddClass("collapse-link");
-                        {
-                          var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
-                          iToolsTag.AddClass("fa fa-chevron-up");
-                        }
-                      }
-                      var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
-                      {
-                        var RowContentDiv = ContentDiv.Helpers.DivC("row");
-                        {
-                          var ColNoContentDiv = RowContentDiv.Helpers.DivC("col-md-12 text-center");
+                          AssessmentsTab.Style.ClearBoth();
+                          AssessmentsTab.AddClass("nav nav-tabs");
+                          var HomeContainerTab = AssessmentsTab.AddTab("Home");
                           {
-                            ColNoContentDiv.AddBinding(Singular.Web.KnockoutBindingString.visible, c => ViewModel.ProductList.Count() == 0);
-                            ColNoContentDiv.Helpers.HTML("<p>Could not find any movies based on your filter criteria.</p>");
-                          }
-                          var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
-                          {
-                            var MoviesWatchedDiv = ColContentDiv.Helpers.ForEach<MELib.Products.Product>(c => c.ProductList);
-                            {
+                              var Row = HomeContainerTab.Helpers.DivC("row margin0");
+                              {
+                                  var RowColLeft = Row.Helpers.DivC("col-md-9");
+                                  {
+                                      var AnotherCardDiv = RowColLeft.Helpers.DivC("ibox float-e-margins paddingBottom");
+                                      {
+                                          var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
+                                          {
+                                              CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
+                                              CardTitleDiv.Helpers.HTML().Heading5("Latest Releases");
+                                          }
+                                          var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
+                                          {
+                                              var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
+                                              aToolsTag.AddClass("collapse-link");
+                                              {
+                                                  var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
+                                                  iToolsTag.AddClass("fa fa-chevron-up");
+                                              }
+                                          }
+                                          var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
+                                          {
+                                              var RowContentDiv = ContentDiv.Helpers.DivC("row");
+                                              {
 
-                              // Using Knockout Binding
-                              // <img width="16px" height="16px" data-bind="attr:{src: imagePath}" />
-                              MoviesWatchedDiv.Helpers.HTML("<div class='item'>");
-                              MoviesWatchedDiv.Helpers.HTML("<img data-bind=\"attr:{src: $data.ProductImageURL()} \" class='product-border'/>");
-                              MoviesWatchedDiv.Helpers.HTML("<b><span data-bind=\"text: $data.ProductName() \"  class='caption text-left'></span></b>");
-                              // MoviesWatchedDiv.Helpers.HTML("<span data-bind=\"text: $data.MovieGenreID() \"  class='caption'></span>");
-                              MoviesWatchedDiv.Helpers.HTML("<span data-bind=\"text: $data.ReleaseDate() \"  class='caption'></span>");
+                                                  var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
+                                                  {
+                                                      var MoviesWatchedDiv = ColContentDiv.Helpers.ForEach<MELib.Products.Product>(c => c.ProductList);
+                                                      {
 
-                            }
-                            var WatchBtn = MoviesWatchedDiv.Helpers.Button("Add To Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
-                            {
-                              WatchBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "RentMovie($data)");
-                              WatchBtn.AddClass("btn btn-primary");
-                              WatchBtn.AddClass("btn btn-primary btn-block");
-                            }
-                            MoviesWatchedDiv.Helpers.HTML("</div>");
+                                                          // Using Knockout Binding
+                                                          // <img width="16px" height="16px" data-bind="attr:{src: imagePath}" />
+                                                          MoviesWatchedDiv.Helpers.HTML("<div class='item'>");
+                                                          MoviesWatchedDiv.Helpers.HTML("<img data-bind=\"attr:{src: $data.ProductImageURL()} \" class='product-border'/>");
+                                                          MoviesWatchedDiv.Helpers.HTML("<span data-bind=\"text: $data.ProductName() + '  R' +  $data.Price()\" class='caption'></span>");
+                                                          // MoviesWatchedDiv.Helpers.HTML("<span data-bind=\"text: $data.MovieGenreID() \"  class='caption'></span>");
+
+                                                      }
+                                                      var WatchBtn = MoviesWatchedDiv.Helpers.Button("Add To Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                      {
+                                                          WatchBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "AddToBasket($data)");
+                                                          WatchBtn.AddClass("btn btn-primary");
+                                                          WatchBtn.AddClass("btn btn-primary btn-block");
+                                                      }
+                                                      MoviesWatchedDiv.Helpers.HTML("</div>");
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  }
+
+                                    var RowColRight = Row.Helpers.DivC("col-md-3");
+                                   {
+
+                                       var AnotherCardDiv = RowColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
+                                       {
+                                           var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
+                                           {
+                                               CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
+                                               CardTitleDiv.Helpers.HTML().Heading5("Filter Criteria");
+                                           }
+                                           var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
+                                           {
+                                               var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
+                                               aToolsTag.AddClass("collapse-link");
+                                               {
+                                                   var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
+                                                   iToolsTag.AddClass("fa fa-chevron-up");
+                                               }
+                                           }
+                                           var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
+                                           {
+                                               var RowContentDiv = ContentDiv.Helpers.DivC("row");
+                                               {
+                                                   var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
+                                                   {
+                                                               var FilterBtn = ColContentDiv.Helpers.Button("View Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.cart_arrow_down);
+                                                               {
+                                                                   FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "ViewCart()");
+                                                                   FilterBtn.AddClass("btn btn-primary btn-outline  marginBottom20  btn-block ");
+                                                               }
+                                                   }
+                                                   var MovieGenreContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
+                                                   {
+                                                       var ReleaseFromDateEditor = MovieGenreContentDiv.Helpers.EditorFor(c => ViewModel.ProductCategoryId);
+                                                       ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
+
+                                                       var FilterBtn = MovieGenreContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       {
+                                                           FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterProducts($data)");
+                                                           FilterBtn.AddClass("btn btn-primary btn-outline");
+                                                       }
+                                                       var ResetBtn = MovieGenreContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       {
+                                                           ResetBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterReset($data)");
+                                                           ResetBtn.AddClass("btn btn-primary btn-outline");
+                                                       }
+                                                   }
+                                               }
+                                           }
+                                       }
+                                   }
+                              }
                           }
-                        }
                       }
-                    }
                   }
-
-                  var RowColRight = Row.Helpers.DivC("col-md-3");
-                  {
-
-                    var AnotherCardDiv = RowColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
-                    {
-                      var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
-                      {
-                        CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
-                        CardTitleDiv.Helpers.HTML().Heading5("Filter Criteria");
-                      }
-                      var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
-                      {
-                        var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
-                        aToolsTag.AddClass("collapse-link");
-                        {
-                          var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
-                          iToolsTag.AddClass("fa fa-chevron-up");
-                        }
-                      }
-                      var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
-                      {
-                        var RowContentDiv = ContentDiv.Helpers.DivC("row");
-                        {
-                          var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
-                          {
-                            var MovieTitleContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
-                            {
-                              MovieTitleContentDiv.Helpers.LabelFor(c => c.ProductName);
-                              var MovieTitleEditor = MovieTitleContentDiv.Helpers.EditorFor(c => c.ProductName);
-                              MovieTitleEditor.AddClass("form-control marginBottom20 filterBox");
-                              MovieTitleEditor.AddBinding(Singular.Web.KnockoutBindingString.id, "MovieTitle");
-                            }
-                          }
-                          var MovieGenreContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
-                          {
-
-                            MovieGenreContentDiv.Helpers.LabelFor(c => ViewModel.ProductID);
-                            var ReleaseFromDateEditor = MovieGenreContentDiv.Helpers.EditorFor(c => ViewModel.ProductID);
-                            ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
-
-                            var FilterBtn = MovieGenreContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
-                            {
-                              FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterMovies($data)");
-                              FilterBtn.AddClass("btn btn-primary btn-outline");
-                            }
-                            var ResetBtn = MovieGenreContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
-                            {
-                              ResetBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterReset($data)");
-                              ResetBtn.AddClass("btn btn-primary btn-outline");
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
               }
-            }
           }
-        }
       }
-    }
   %>
   <script type="text/javascript">
     // Place page specific JavaScript here or in a JS file and include in the HeadContent section
@@ -176,22 +178,27 @@
       $("#menuItem1 > ul").addClass('in');
     });
       
-    var RentMovie = function (obj) {
-      ViewModel.CallServerMethod('RentMovie', { MovieID: obj.MovieID(), ShowLoadingBar: true }, function (result) {
+      var AddToBasket = function (obj) {
+          var ProductCount = 1;
+          ViewModel.CallServerMethod("AddToBasket", { ProductID: obj.ProductID(), productCount: ProductCount,ProductList: ViewModel.ProductList.Serialise() ,ShowLoadingBar: true }, function (result) {
+              if (result.Success) {
+                 MEHelpers.Notification("Product Added TO Cart", 'center', 'warning', 5000);
+                   Singular.AddMessage(3, 'Save', 'Added Successfully.').Fade(2000);
+              }
+              else {
+                  Singular.AddMessage(1, 'Error', result.ErrorText).Fade(2000);
+                 MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+              }
+          });
+      }
+      var ViewCart = function () {
+          window.location = '../Carts/Cart.aspx';
+      }
+      var FilterProducts = function (obj) {
+      ViewModel.CallServerMethod('FilterProducts', { ProductCategoryId: obj.ProductCategoryId(), ResetInd: 0, ShowLoadingBar: true }, function (result) {
         if (result.Success) {
-          window.location = result.Data;
-        }
-        else {
-          MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
-        }
-      })
-    }
-
-    var FilterMovies = function (obj) {
-      ViewModel.CallServerMethod('FilterMovies', { MovieGenreID: obj.MovieGenreID(), ResetInd: 0, ShowLoadingBar: true }, function (result) {
-        if (result.Success) {
-          MEHelpers.Notification("Movies filtered successfully.", 'center', 'info', 1000);
-          ViewModel.MovieList.Set(result.Data);
+            MEHelpers.Notification("Products filtered successfully.", 'center', 'info', 1000);
+            ViewModel.ProductList.Set(result.Data);
         }
         else {
           MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
@@ -200,10 +207,10 @@
     };
 
     var FilterReset = function (obj) {
-      ViewModel.CallServerMethod('FilterMovies', { MovieGenreID: obj.MovieGenreID(), ResetInd: 1, ShowLoadingBar: true }, function (result) {
+      ViewModel.CallServerMethod('FilterProducts', { ProductCategoryId: obj.ProductCategoryId(), ResetInd: 1, ShowLoadingBar: true }, function (result) {
         if (result.Success) {
-          MEHelpers.Notification("Movies reset successfully.", 'center', 'info', 1000);
-          ViewModel.MovieList.Set(result.Data);
+          MEHelpers.Notification("Products reset successfully.", 'center', 'info', 1000);
+            ViewModel.ProductList.Set(result.Data);
           // Set Drop Down to 'Select'
         }
         else {
@@ -211,8 +218,6 @@
         }
       })
     };
-    var FilterMovieTitle = function (obj) {
-      alert('test');
-    };
+
   </script>
 </asp:Content>

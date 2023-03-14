@@ -42,9 +42,10 @@ namespace MELib.Movies
     [Serializable]
     public class Criteria
       : CriteriaBase<Criteria>
-    {
-      public int? MovieGenreID = null;
-      public Criteria()
+        {
+            public int? MovieGenreID = null;
+            public int? MovieID = null;
+            public Criteria()
       {
       }
 
@@ -70,12 +71,17 @@ namespace MELib.Movies
       return DataPortal.Fetch<MovieList>(new Criteria());
     }
 
-    public static MovieList GetMovieList(int? MovieGenreID)
-    {
-      return DataPortal.Fetch<MovieList>(new Criteria { MovieGenreID = MovieGenreID });
-    }
+        public static MovieList GetMovieList(int? MovieGenreID)
+        {
+            return DataPortal.Fetch<MovieList>(new Criteria { MovieGenreID = MovieGenreID });
+        }
 
-    protected void Fetch(SafeDataReader sdr)
+        public static MovieList GetMovieById(int? MovieId)
+        {
+            return DataPortal.Fetch<MovieList>(new Criteria { MovieID = MovieId });
+        }
+
+        protected void Fetch(SafeDataReader sdr)
     {
       this.RaiseListChangedEvents = false;
       while (sdr.Read())
@@ -98,8 +104,9 @@ namespace MELib.Movies
             cm.CommandType = CommandType.StoredProcedure;
             cm.CommandText = "GetProcs.getMovieList";
             cm.Parameters.AddWithValue("@MovieGenreID", Singular.Misc.NothingDBNull(crit.MovieGenreID));
+            cm.Parameters.AddWithValue("@MovieID", Singular.Misc.NothingDBNull(crit.MovieID));
 
-            using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
+                        using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
             {
               Fetch(sdr);
             }

@@ -27,6 +27,8 @@ namespace MEWeb.Maintenance
             mainSection.AddMaintenancePage<MELib.Movies.MovieList>("Movie List");
             mainSection.AddMaintenancePage<MELib.ProductCategory.ProductCategoryList>("Products Categories");
             mainSection.AddMaintenancePage<MELib.Products.ProductList>("Products List");
+            mainSection.AddMaintenancePage<MELib.RO.OrderList>("Orders");
+            mainSection.AddMaintenancePage<MELib.RO.TransactionList>("Transactions");
             // Add more lists here for maintaining, e.g. Status List, Years or lookup tables used in the project
         }
     }

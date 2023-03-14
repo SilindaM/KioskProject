@@ -13,10 +13,10 @@ using System.Web.UI.WebControls;
 
 namespace MEWeb.Carts
 {
-    public partial class Cart : MEPageBase<CartVM>
+    public partial class TopCart : MEPageBase<TopCartVM>
     {
     }
-    public class CartVM : MEStatelessViewModel<CartVM>
+    public class TopCartVM : MEStatelessViewModel<TopCartVM>
     {
         public MELib.Carts.CartItemList CartItemList { get; set; }
         public MELib.Products.ProductList ProductList { get; set; }
@@ -28,14 +28,14 @@ namespace MEWeb.Carts
         public MELib.Carts.Cart Cart { get; set; }
         public MELib.Orders.OrderList OrderList { get; set; }
         public decimal TotalAmount { get; set; }
-        public int totalQuantity { get; set; } 
+        public int totalQuantity { get; set; }
         public int ItemQuantity { get; set; }
         public int ProductID { get; set; }
         public MELib.Accounts.AccountList UpdateAccount { get; set; }
         public MELib.Accounts.Account Deposit { get; set; }
         public int? AccountID { get; set; }
         public MELib.RO.TransactionTypeList TransactionTypesList { get; set; }
-        
+
 
         /// <summary>
         /// Gets or sets the Movie Genre ID
@@ -43,7 +43,7 @@ namespace MEWeb.Carts
         [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROOrderTypeList), UnselectedText = "Select", ValueMember = "OrderTypeId", DisplayMember = "OrderName")]
         [Display(Name = "OrderName")]
         public int OrderTypeId { get; set; }
-        public CartVM()
+        public TopCartVM()
         {
 
         }
@@ -116,7 +116,7 @@ namespace MEWeb.Carts
             }
         }
         // method to delete from cart
-        
+
         public static Result DeleteCartItem(int CartItemID, int ProductId, int productCount, CartItemList cartItemList)
         {
             //cart
@@ -173,10 +173,10 @@ namespace MEWeb.Carts
 
         // update cart
 
-        public static Result UpdateCart(int CartItemID,int ProductId, int productCount, CartItemList cartItemList)
+        public static Result UpdateCart(int CartItemID, int ProductId, int productCount, CartItemList cartItemList)
         {
             //cart
-           var  cartList = MELib.Carts.CartList.GetCartList();
+            var cartList = MELib.Carts.CartList.GetCartList();
 
             var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
 
@@ -198,10 +198,9 @@ namespace MEWeb.Carts
             try
             {
                 //get cartQuantity to update
-                var oldCartQuantity = cartItems.Quantity + products.ProductQuantity;
+                var cartQuantity = cartItems.Quantity - productCount;
 
-                if (productCount > oldCartQuantity/*&& newCartQuantity <= products.ProductQuantity*/)
-               // if (productCount > products.ProductQuantity)
+                if (cartItems.Quantity > products.ProductQuantity && cartQuantity <= cartItems.Quantity)
                 {
                     result.Success = false;
                     result.ErrorText = "Sorry only " + products.ProductQuantity.ToString() + " left In Stock";
@@ -243,28 +242,28 @@ namespace MEWeb.Carts
 
 
                         //get the new product count in the cart
-                        var UpdateQuantity = productCount - cartItems.Quantity ;
+                        var UpdateQuantity = productCount - cartItems.Quantity;
 
                         // return the items in the stock
-                            ProductSubtraction(Convert.ToInt32(cartItems.ProductId), productCount);
-                            //increase the cartitem 
-                            cartItems.Quantity = productCount;
-                            //increase the price of the cart amount
-                            cartItems.Value = productCount * products.Price;
-                            //save the cart Item
-                            cartItemList.Add(cartItems);
-                            cartItemList.Save();
+                        ProductSubtraction(Convert.ToInt32(cartItems.ProductId), productCount);
+                        //increase the cartitem 
+                        cartItems.Quantity = productCount;
+                        //increase the price of the cart amount
+                        cartItems.Value = productCount * products.Price;
+                        //save the cart Item
+                        cartItemList.Add(cartItems);
+                        cartItemList.Save();
 
 
-                            //increase the cart quantity
-                            userCart.Quantity += UpdateQuantity;
-                            //increase the cart total amount
-                            userCart.TotalAmount += UpdateQuantity * products.Price;
-                            //save the update in the users cart
-                            cartList.Add(userCart);
-                            cartList.Save();
+                        //increase the cart quantity
+                        userCart.Quantity += UpdateQuantity;
+                        //increase the cart total amount
+                        userCart.TotalAmount += UpdateQuantity * products.Price;
+                        //save the update in the users cart
+                        cartList.Add(userCart);
+                        cartList.Save();
                     }
-                    
+
                     // check if the product is not less than 0
                     else
                     {
@@ -286,7 +285,7 @@ namespace MEWeb.Carts
         {
             //get the current user
             var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
-            
+
             //get the cart of logged in user 
             var userCart = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
 
@@ -300,7 +299,8 @@ namespace MEWeb.Carts
             //create single order
             MELib.Orders.OrderDetail newOrderDetail = MELib.Orders.OrderDetail.NewOrderDetail();
 
-            
+
+
             //new Transaction
             MELib.Transactions.Transaction newTransaction = MELib.Transactions.Transaction.NewTransaction();
 
@@ -308,18 +308,21 @@ namespace MEWeb.Carts
             MELib.Transactions.TransactionList transactions = MELib.Transactions.TransactionList.NewTransactionList();
 
             // 
-            MELib.Accounts.AccountList userAccount = MELib.Accounts.AccountList.GetAccountList(currentuser);
+            MELib.Accounts.AccountList userAccount = MELib.Accounts.AccountList.GetAccountByID(currentuser);
             //get the account
             var account = userAccount.FirstOrDefault();
 
             //transaction type
             var transtype = MELib.Transactions.TransactionTypeList.GetTransactionTypeList().FirstOrDefault();
-            
+
+
+            //get all orderTypes
+
             // get the cart items
-            // var cartItems = MELib.Carts.CartItemList.GetCartItemByCartItemId(Convert.ToInt32(userCart)).ToList();
+            // var cartItems = MELib.Carts.CartItemList.GetCartItemByCartItemId(Convert.ToInt32(CartItemID)).FirstOrDefault();
 
             // get the order
-            MELib.Orders.OrderTypeList orderTypes= MELib.Orders.OrderTypeList.GetOrderTypeById(orderTypeId);
+            MELib.Orders.OrderTypeList orderTypes = MELib.Orders.OrderTypeList.GetOrderTypeById(orderTypeId);
 
             //transaction types
             var TransactionTypesList = MELib.RO.TransactionTypeList.GetTransactionTypeList().ToList();
@@ -330,15 +333,15 @@ namespace MEWeb.Carts
             //cart total amount
             var TotalAmount = userCart.TotalAmount;
 
-            
+
 
             Result result = new Result();
             try
             {
                 // check if the orderType its collection or delivery
-                if(orderTypeId ==1)
+                if (orderTypeId == 1)
                 {
-                    TotalAmount =userCart.TotalAmount + orderType.amount;
+                    TotalAmount = userCart.TotalAmount + orderType.amount;
                 }
                 // make subtraction from the user's account
                 //check if user has sufficient amount, and not a delivery
@@ -391,10 +394,6 @@ namespace MEWeb.Carts
                     MELib.Orders.Order OrdersList = MELib.Orders.OrderList.GetOrderList().LastOrDefault();
                     var orderid = OrdersList.OrderID;
                     //create order details
-                    //get cartItem of currentUser
-
-                    // var cartItemList = MELib.Carts.CartItemList.GetCartItemByCartItemId(userCart).FirstOrDefault();
-                    
                     foreach (var od in CartItemList)
                     {
                         newOrderDetail.OrderId = orderid;
@@ -406,43 +405,24 @@ namespace MEWeb.Carts
                         newOrderDetail.Value = od.Value;
                         newOrderDetail.ProductId = od.ProductId;
                         newOrderDetail.DateCreated = DateTime.Now;
-                        
 
-                        //// make the isActive false
-                        // CartItemList.ToList().ForEach(x => x.IsActiveInd = false);
-                        // CartItemList.Add(od);
-
-                        od.IsActiveInd = false;
-                        od.Quantity = 3;
-                        //CartItemList.Save();
+                        //save the order Details
+                        newOrderDetailsList.Add(newOrderDetail);
+                        newOrderDetailsList.Save();
                     }
 
-                    //save the order Details
-                    newOrderDetailsList.Add(newOrderDetail);
-                    newOrderDetailsList.Save();
 
-
+                    //clear the cart
+                    // clear cart item
+                    CartItemList.Clear();
+                    //save the cart item, cartItem now is empty;
                     CartItemList.Save();
-
-
-
-                    //userCartItems.ForEach(x => x.IsActiveInd = false);
-                    //// CartItemList.GetCartItemByCartItemId(userCart).ToList().ForEach(x => x.IsActiveInd = false);
-                    ////save the cart item, cartItem now is empty;
-                    //userCartItems.TrySave(typeof(CartItemList));
-                    //CartItemList.Add();
-                    //CartItemList.Save();
-
-                    //Clearing the basket
-                    //CartItemList = MELib.Carts.CartItemList(UserID);
-                    //CartItemList.ToList().ForEach(c => { c.IsActiveInd = false; });
-                    //CartItemList.TrySave();
 
                     //update the cart
                     userCart.TotalAmount = 0;
                     userCart.Quantity = 0;
                     userCart.TrySave(typeof(CartList));
-                 }
+                }
                 else
                 {
                     result.ErrorText = "Insufficient Amount";
@@ -459,7 +439,7 @@ namespace MEWeb.Carts
         public static Result AmountDeduction(int userId, decimal Amount)
         {
             //get the current user
-            var currentUser = MELib.Accounts.AccountList.GetAccountList(userId).FirstOrDefault();
+            var currentUser = MELib.Accounts.AccountList.GetAccountByID(userId).FirstOrDefault();
             //  currentUser.UserID = Singular.Security.Security.CurrentIdentity.UserID;
 
             Result result = new Result();
@@ -490,14 +470,14 @@ namespace MEWeb.Carts
         public static Result AmountAddition(int userId, decimal Amount)
         {
             //get the current user
-            var currentUser = MELib.Accounts.AccountList.GetAccountList(userId).FirstOrDefault();
+            var currentUser = MELib.Accounts.AccountList.GetAccountByID(userId).FirstOrDefault();
             //  currentUser.UserID = Singular.Security.Security.CurrentIdentity.UserID;
 
             Result result = new Result();
             try
             {
-                    currentUser.Balance += Amount;
-                    currentUser.TrySave(typeof(AccountList));
+                currentUser.Balance += Amount;
+                currentUser.TrySave(typeof(AccountList));
 
             }
             catch (Exception e)
@@ -513,7 +493,7 @@ namespace MEWeb.Carts
         //remove all items in cart
         public static Result ClearCart(CartItemList CartItemList)
         {
-            
+
             //get the current user
             var currentuser = Singular.Security.Security.CurrentIdentity.UserID;
 
@@ -532,7 +512,7 @@ namespace MEWeb.Carts
                 foreach (var product in CartItemList)
                 {
                     // return each product
-                    ProductAddition(Convert.ToInt32(product.ProductId),product.Quantity);
+                    ProductAddition(Convert.ToInt32(product.ProductId), product.Quantity);
                 }
                 // return the amount
                 AmountAddition(currentuser, userCart.TotalAmount);
@@ -547,7 +527,7 @@ namespace MEWeb.Carts
                 userCart.TrySave(typeof(CartList));
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
