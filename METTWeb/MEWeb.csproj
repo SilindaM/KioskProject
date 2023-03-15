@@ -165,6 +165,7 @@
     <Content Include="Overview\Overview.aspx" />
     <Content Include="ProductCategory\ProductCategory.aspx" />
     <Content Include="Products\Products.aspx" />
+    <Content Include="Products\RecentlyPurchase.aspx" />
     <Content Include="Products\TopProducts.aspx" />
     <Content Include="Profile\Profile.aspx" />
     <Content Include="Profile\DepositFunds.aspx" />
@@ -551,6 +552,13 @@
     </Compile>
     <Compile Include="Products\Products.aspx.designer.cs">
       <DependentUpon>Products.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Products\RecentlyPurchase.aspx.cs">
+      <DependentUpon>RecentlyPurchase.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Products\RecentlyPurchase.aspx.designer.cs">
+      <DependentUpon>RecentlyPurchase.aspx</DependentUpon>
     </Compile>
     <Compile Include="Products\TopProducts.aspx.cs">
       <DependentUpon>TopProducts.aspx</DependentUpon>

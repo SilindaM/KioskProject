@@ -44,6 +44,8 @@ namespace MELib.Orders
         public class Criteria
           : CriteriaBase<Criteria>
         {
+
+            public int? OrderID = null;
             public Criteria()
             {
             }
@@ -63,6 +65,11 @@ namespace MELib.Orders
         public static OrderDetailList GetOrderDetailList()
         {
             return DataPortal.Fetch<OrderDetailList>(new Criteria());
+        }
+
+        public static OrderDetailList GetOrderDetailByOrderID(int OrderId)
+        {
+            return DataPortal.Fetch<OrderDetailList>(new Criteria {OrderID = OrderId});
         }
 
         protected void Fetch(SafeDataReader sdr)
@@ -87,6 +94,7 @@ namespace MELib.Orders
                     {
                         cm.CommandType = CommandType.StoredProcedure;
                         cm.CommandText = "GetProcs.getOrderDetailList";
+                        cm.Parameters.AddWithValue("@OrderID", Singular.Misc.NothingDBNull(crit.OrderID));
                         using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
                         {
                             Fetch(sdr);

@@ -180,7 +180,7 @@
       
       var AddToBasket = function (obj) {
           var ProductCount = 1;
-          ViewModel.CallServerMethod("AddToBasket", { ProductID: obj.ProductID(), productCount: ProductCount,ProductList: ViewModel.ProductList.Serialise() ,ShowLoadingBar: true }, function (result) {
+          ViewModel.CallServerMethod("AddToBasket", { ProductID: obj.ProductID(),ProductList: ViewModel.ProductList.Serialise() ,ShowLoadingBar: true }, function (result) {
               if (result.Success) {
                  MEHelpers.Notification("Product Added TO Cart", 'center', 'warning', 5000);
                    Singular.AddMessage(3, 'Save', 'Added Successfully.').Fade(2000);

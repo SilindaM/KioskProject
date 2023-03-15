@@ -27,9 +27,7 @@ namespace MEWeb.Movies
         [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROMovieGenreList), UnselectedText = "Select", ValueMember = "MovieGenreID", DisplayMember = "Genre")]
         [Display(Name = "Genre")]
         public int? MovieGenreID { get; set; }
-
-        public int? test { get; set; } = 200;
-
+        
         public MoviesVM()
         {
 

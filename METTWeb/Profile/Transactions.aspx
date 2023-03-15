@@ -39,7 +39,7 @@
                           var MovieTitleText = MovieTitle.Helpers.Span(c => c.TransactionID);
                           MovieTitle.Style.Width = "250px";
                         }
-                        var MovieDescription = FirstRow.AddColumn("Transaction Type");
+                        var MovieDescription = FirstRow.AddColumn("Transaction Name");
                         {
                           var MovieDescriptionText = MovieDescription.Helpers.Span(c => c.Description);
                         }
@@ -47,11 +47,11 @@
                         {
                           var MovieDescriptionText = TransactionAmount.Helpers.Span(c => c.Amount);
                         }
-                        var CurrentBalance = FirstRow.AddColumn("Transaction Amount");
+                        var CurrentBalance = FirstRow.AddColumn("Old Balance");
                         {
                           var MovieDescriptionText = CurrentBalance.Helpers.Span(c => c.CurrentBalance);
                         }
-                        var NewBalance = FirstRow.AddColumn("Transaction Amount");
+                        var NewBalance = FirstRow.AddColumn("New Balance");
                         {
                           var MovieDescriptionText = NewBalance.Helpers.Span(c => c.NewBalance);
                         }

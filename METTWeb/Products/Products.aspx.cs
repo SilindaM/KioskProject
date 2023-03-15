@@ -163,6 +163,7 @@ namespace MEWeb.Products
                             cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
                             cartItem.Price = ProdSaveToBasket.Price;
                             cartItem.Quantity = productCount;
+                            cartItem.IsActiveInd = true;
                             cartItem.Value = productCount * ProdSaveToBasket.Price;
                             //save to object
                             cartItemList.Add(cartItem);
@@ -210,7 +211,7 @@ namespace MEWeb.Products
 
                             // check if the cart to be added exists in the cartItem, if exists update the product
                             // alse edit the cart quantity and total amount
-                            if (cartItemExists != null)
+                            if (cartItemExists != null && cartExists.IsActiveInd.Equals(true))
                             {
                                 // update the cart quantity and total amount
                                 cartExists.Quantity += productCount;
@@ -250,6 +251,7 @@ namespace MEWeb.Products
                                 cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
                                 cartItem.Price = ProdSaveToBasket.Price;
                                 cartItem.Quantity = productCount;
+                                cartItem.IsActiveInd = true;
                                 cartItem.Value += ProdSaveToBasket.Price * productCount;
 
                                 //save the cart item

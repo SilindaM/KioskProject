@@ -70,7 +70,7 @@ namespace MELib.Carts
         {
             return DataPortal.Fetch<CartList>(new Criteria());
         }
-        public static CartList GetCartByID(int CartID)
+        public static CartList GetCartByID(int? CartID)
         {
             return DataPortal.Fetch<CartList>(new Criteria());
         }

@@ -64,7 +64,7 @@ namespace MEWeb.Carts
             TransactionTypeList = MELib.Transactions.TransactionTypeList.GetTransactionTypeList();
 
 
-            //  totalQuantity = CartList.FirstOrDefault().Quantity;
+           totalQuantity = cartById.FirstOrDefault().Quantity;
             //ItemQuantity = CartItemList.FirstOrDefault().Quantity;
 
         }
@@ -413,16 +413,15 @@ namespace MEWeb.Carts
                         // CartItemList.Add(od);
 
                         od.IsActiveInd = false;
-                        od.Quantity = 3;
                         //CartItemList.Save();
+                        //save the order Details
+                        newOrderDetailsList.Add(newOrderDetail);
+                        newOrderDetailsList.Save();
+                        CartItemList.Save();
                     }
 
-                    //save the order Details
-                    newOrderDetailsList.Add(newOrderDetail);
-                    newOrderDetailsList.Save();
 
 
-                    CartItemList.Save();
 
 
 

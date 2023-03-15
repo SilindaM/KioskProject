@@ -44,8 +44,13 @@ namespace MELib.Transactions
         public class Criteria
           : CriteriaBase<Criteria>
         {
+            public int? TransactionTypeID = null;
             public Criteria()
             {
+            }
+            public Criteria(int TransactionTypeId)
+            {
+                this.TransactionTypeID = TransactionTypeId;
             }
 
         }
@@ -64,7 +69,11 @@ namespace MELib.Transactions
         {
             return DataPortal.Fetch<TransactionTypeList>(new Criteria());
         }
-
+        public static TransactionTypeList GetTransactionTypeById(int? TransactionTypeId)
+        {
+            return DataPortal.Fetch<TransactionTypeList>(new Criteria { TransactionTypeID = TransactionTypeId });
+        }
+        
         protected void Fetch(SafeDataReader sdr)
         {
             this.RaiseListChangedEvents = false;

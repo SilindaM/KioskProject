@@ -33,18 +33,14 @@
         {
             var MainHDiv = h.DivC("row pad-top-10");
             {
-                var PanelContainer = MainHDiv.Helpers.DivC("col-md-12 p-n-lr");
-                {
-                    var HomeContainer = PanelContainer.Helpers.DivC("tabs-container");
+               
+                    var HomeContainer = MainHDiv.Helpers.DivC("tabs-container");
                     {
                         var AssessmentsTab = HomeContainer.Helpers.TabControl();
                         {
                             AssessmentsTab.Style.ClearBoth();
                             AssessmentsTab.AddClass("nav nav-tabs");
-
-
-
-
+                        
                             var HomeContainerTab = AssessmentsTab.AddTab("Catalogy");
 
                             {
@@ -84,17 +80,19 @@
                                                             ProductListRow.Style.BackgroundColour = "#1000";
 
                                                             {
-                                                                var ProductTitle = ProductListRow.AddColumn("Product Name");
+                                                                var ProductName = ProductListRow.AddColumn("Product Name");
                                                                 {
-                                                                    var productNameText = ProductTitle.Helpers.Span(c => c.ProductName);
+                                                                    var productNameText = ProductName.Helpers.Span(c => c.ProductName);
                                                                     productNameText.Style.FontSize = "15px";
-                                                                    productNameText.Style.Width = "50px";
+                                                                    productNameText.Style.Width = "250px";
+                                                                    
 
                                                                 }
                                                                 var ProductDescription = ProductListRow.AddColumn("Description");
                                                                 {
                                                                     var ProductDescriptionText = ProductDescription.Helpers.Span(c => c.ProductDescription);
                                                                     ProductDescriptionText.Style.FontSize = "15px";
+                                                                    ProductDescriptionText.Style.Width = "250px";
                                                                 }
 
                                                                 var ProductPrice = ProductListRow.AddColumn("Price");
@@ -102,12 +100,12 @@
                                                                     var Price = ProductPrice.Helpers.Span(c => "R " + c.Price);
                                                                     Price.Style.FontSize = "15px";
                                                                 }
-                                                                //var ProductImage = ProductListRow.AddColumn("Product Image");
-                                                                //{
-                                                                //     ProductImage.Helpers.HTML("<div class='item'>");
-                                                                //    var Image = ProductImage.Helpers.HTML("<img data-bind=\"attr:{src: $data.ProductImage()} \" class='product-border'/>");
-                                                                //    Image.Style.FontSize = "15px";
-                                                                //}
+                                                                var ProductImage = ProductListRow.AddColumn("Product Image");
+                                                                {
+                                                                    ProductImage.Helpers.HTML("<div class='item'>");
+                                                                    var Image = ProductImage.Helpers.HTML("<img data-bind=\"attr:{src: $data.ProductImage()} \" class='product-border'/>");
+                                                                    Image.Style.FontSize = "15px";
+                                                                }
                                                                 var CartQuantity = ProductListRow.AddColumn("Quantity");
                                                                 {
                                                                     var Quantity = CartQuantity.Helpers.EditorFor(c => c.Quantity);
@@ -163,8 +161,9 @@
                                                 {
                                                     var MovieGenreContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                     {
-
+                                                    
                                                         MovieGenreContentDiv.Helpers.HTML().Heading5("Select Delivery Method");
+                                                        MovieGenreContentDiv.Helpers.HTML().Heading5("R50 Delivery, Collection is F");
                                                         var ReleaseFromDateEditor = MovieGenreContentDiv.Helpers.EditorFor(c => ViewModel.OrderTypeId);
                                                         ReleaseFromDateEditor.AddClass("form-control marginBottom20");
 
@@ -180,15 +179,21 @@
                                                         }
                                                         var cartSummary = MovieGenreContentDiv.Helpers.DivC("col-md-12");
                                                         {
+                                                            
+                                                        cartSummary.Helpers.HTML().Heading4("Cart Summary");
+                                                            var CartList = cartSummary.Helpers.BootstrapTableFor<MELib.Carts.CartItem>((c) => c.CartItemList, false, false, "");
+                                                           
                                                             var cartAmount = MovieGenreContentDiv.Helpers.DivC("col-md-6");
                                                             {
-                                                                cartAmount.Helpers.HTML().Heading4("Total");
-                                                                cartAmount.Helpers.LabelFor(c => ViewModel.totalQuantity.ToString());
+                                                                cartAmount.Helpers.HTML().Heading5("AMOUNT");
+                                                                cartAmount.Helpers.Span(c => "R " + c.TotalAmount);
+                                                                cartAmount.Style.FontSize = "15px";
                                                             }
                                                             var cartQuantity = MovieGenreContentDiv.Helpers.DivC("col-md-6");
                                                             {
-                                                                cartQuantity.Helpers.HTML().Heading4("Quantity");
-                                                                cartQuantity.Helpers.LabelFor(ca => ViewModel.TotalAmount);
+                                                                cartQuantity.Helpers.HTML().Heading5("QUANTITY");
+                                                                cartQuantity.Helpers.Span(c => c.totalQuantity + " Items");
+                                                                cartQuantity.Style.FontSize = "15px";
                                                             }
                                                         }
                                                     }
@@ -202,7 +207,7 @@
                     }
                 }
             }
-        }
+       
 
         %>
     <script type="text/javascript">

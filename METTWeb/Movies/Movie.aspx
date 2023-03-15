@@ -12,93 +12,94 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
   <%
-    using (var h = this.Helpers)
-    {
-      var MainContent = h.DivC("row pad-top-10");
+      using (var h = this.Helpers)
       {
-        var MainContainer = MainContent.Helpers.DivC("col-md-12 p-n-lr");
-        {
-          var PageContainer = MainContainer.Helpers.DivC("tabs-container");
+          var MainContent = h.DivC("row pad-top-10");
           {
-            var PageTab = PageContainer.Helpers.TabControl();
-            {
-              PageTab.Style.ClearBoth();
-              PageTab.AddClass("nav nav-tabs");
-              var ContainerTab = PageTab.AddTab("Available Movies");
+              var MainContainer = MainContent.Helpers.DivC("col-md-12 p-n-lr");
               {
-                var RowContentDiv = ContainerTab.Helpers.DivC("row");
-                {
-                  #region Left Column / Data
-                  var LeftColRight = RowContentDiv.Helpers.DivC("col-md-2");
+                  var PageContainer = MainContainer.Helpers.DivC("tabs-container");
                   {
-                  }
-                  #endregion
-
-                  #region Deposit Column / Filters
-                  var MiddleColRight = RowContentDiv.Helpers.DivC("col-md-8");
-                  {
-
-                    var AnotherCardDiv = MiddleColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
-                    {
-                      var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
+                      var PageTab = PageContainer.Helpers.TabControl();
                       {
-                        CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
-                        CardTitleDiv.Helpers.HTML().Heading5("Transaction Purchase Confirmation");
-                      }
-                      var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
-                      {
-                        var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
-                        aToolsTag.AddClass("collapse-link");
-                        {
-                          var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
-                          iToolsTag.AddClass("fa fa-chevron-up");
-                        }
-                      }
-                      var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
-                      {
-                        var MovieContentDiv = ContentDiv.Helpers.DivC("row");
-                        {
-                          var MovieDiv = MovieContentDiv.Helpers.DivC("col-md-12 text-center");
-                          {   
-                                                          // Place Content Here
-                                                          var MovieTitle = MovieDiv.Helpers.Span(c => "R " + c.MovieTitle);
-                                                          MovieTitle.Style.FontSize = "15px";
-                                                          MovieDiv.Helpers.HTMLTag("br");
+                          PageTab.Style.ClearBoth();
+                          PageTab.AddClass("nav nav-tabs");
+                          var ContainerTab = PageTab.AddTab("Available Movies");
+                          {
+                              var RowContentDiv = ContainerTab.Helpers.DivC("row");
+                              {
+                                  #region Left Column / Data
+                                  var LeftColRight = RowContentDiv.Helpers.DivC("col-md-2");
+                                  {
+                                  }
+                                  #endregion
 
-                                                          var Description = MovieDiv.Helpers.Span(c => ViewModel.MovieDescription);
-                                                          Description.Style.FontSize = "15px";
-                                                          MovieDiv.Helpers.HTMLTag("br");
+                                  #region Deposit Column / Filters
+                                  var MiddleColRight = RowContentDiv.Helpers.DivC("col-md-8");
+                                  {
 
-                            var VideoContainer = MovieDiv.Helpers.HTMLTag("video controls");
-                            {
-                               VideoContainer.Helpers.HTML("<source src='../Media/Videos/Silver Fox Intro.mp4' type='video/mp4'>");
-                            }
+                                      var AnotherCardDiv = MiddleColRight.Helpers.DivC("ibox float-e-margins paddingBottom");
+                                      {
+                                          var CardTitleDiv = AnotherCardDiv.Helpers.DivC("ibox-title");
+                                          {
+                                              CardTitleDiv.Helpers.HTML("<i class='ffa-lg fa-fw pull-left'></i>");
+                                              CardTitleDiv.Helpers.HTML().Heading5("Transaction Purchase Confirmation");
+                                          }
+                                          var CardTitleToolsDiv = CardTitleDiv.Helpers.DivC("ibox-tools");
+                                          {
+                                              var aToolsTag = CardTitleToolsDiv.Helpers.HTMLTag("a");
+                                              aToolsTag.AddClass("collapse-link");
+                                              {
+                                                  var iToolsTag = aToolsTag.Helpers.HTMLTag("i");
+                                                  iToolsTag.AddClass("fa fa-chevron-up");
+                                              }
+                                          }
+                                          var ContentDiv = AnotherCardDiv.Helpers.DivC("ibox-content");
+                                          {
+                                              var MovieContentDiv = ContentDiv.Helpers.DivC("row");
+                                              {
+                                                  var MovieDiv = MovieContentDiv.Helpers.DivC("col-md-12 text-center");
+                                                  {
+                                                      var MoviewInfo = MovieDiv.Helpers.ForEach<MELib.Movies.Movie>(c => c.MovieList);
+                                                      // Place Content Here
+                                                      var MovieTitle = MovieDiv.Helpers.Span(c => "R " + c.MovieID);
+                                                      MovieTitle.Style.FontSize = "15px";
+                                                      MovieDiv.Helpers.HTMLTag("br");
 
-                            // Rent Movie
-                            var RentMovieBtn = MovieDiv.Helpers.Button("Pay & Watch", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
-                            {
-                              RentMovieBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "RentNow()");
-                              RentMovieBtn.AddClass("btn btn-primary");
-                            }
+                                                      var Description = MovieDiv.Helpers.Span(c => ViewModel.MovieID);
+                                                      Description.Style.FontSize = "15px";
+                                                      MovieDiv.Helpers.HTMLTag("br");
+
+                                                      var VideoContainer = MovieDiv.Helpers.HTMLTag("video controls");
+                                                      {
+                                                          VideoContainer.Helpers.HTML("<source src='../Media/Videos/Silver Fox Intro.mp4' type='video/mp4'>");
+                                                      }
+
+                                                      // Rent Movie
+                                                      var RentMovieBtn = MovieDiv.Helpers.Button("Pay & Watch", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                      {
+                                                          RentMovieBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "RentMovie($data)");
+                                                          RentMovieBtn.AddClass("btn btn-primary");
+                                                      }
+                                                  }
+
+                                              }
+                                          }
+                                      }
+                                      #endregion
+                                      #region Right Column / Data
+                                      var RowColRight = RowContentDiv.Helpers.DivC("col-md-2");
+                                      {
+                                      }
+                                      #endregion
+                                  }
+                              }
                           }
-
-                        }
                       }
-                    }
-                    #endregion
-                    #region Right Column / Data
-                    var RowColRight = RowContentDiv.Helpers.DivC("col-md-2");
-                    {
-                    }
-                    #endregion
                   }
-                }
               }
-            }
           }
-        }
       }
-    }
   %>
   <script type="text/javascript">
     // Place page specific JavaScript here or in a JS file and include in the HeadContent section
@@ -106,7 +107,16 @@
       $("#menuItem1").addClass('active');
       $("#menuItem1 > ul").addClass('in');
     });
-
+   var RentMovie = function (obj) {
+      ViewModel.CallServerMethod('RentMovie', { MovieID: obj.MovieID(), ShowLoadingBar: true }, function (result) {
+        if (result.Success) {
+          window.location = result.Data;
+        }
+        else {
+          MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+        }
+      })
+    }
 
   </script>
 </asp:Content>

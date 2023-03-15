@@ -31,8 +31,7 @@ namespace MEWeb.Products
         /// Gets or sets the Movie Genre ID
         /// </summary>
         /// 
-
-
+        
         [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), UnselectedText = "Select", ValueMember = "ProductCategoryId", DisplayMember = "ProductCategoryName")]
         [Display(Name = "ProductCategoryName")]
         public int? ProductCategoryId { get; set; }
@@ -42,7 +41,8 @@ namespace MEWeb.Products
         }
         protected override void Setup()
         {
-            base.Setup(); ProductList = MELib.Products.ProductList.GetProductList();
+            base.Setup();
+            ProductList = MELib.Products.ProductList.GetProductList();
             CartList = MELib.Carts.CartList.GetCartList();
             CartItemList = MELib.Carts.CartItemList.GetCartItemList();
         }
@@ -96,8 +96,9 @@ namespace MEWeb.Products
                 sr.Success = false;
             }
         }
-        public static Result AddToBasket(int ProductID, int productCount, ProductList productlist)
+        public static Result AddToBasket(int ProductID, ProductList productlist)
         {
+            int productCount = 1;
             Result result = new Result();
             try
             {
@@ -123,14 +124,7 @@ namespace MEWeb.Products
 
                 //get the cart of logged in user 
                 var cartExists = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
-
-                //Check if the cart has quantity
-                if (productCount <= 0)
-                {
-                    result.ErrorText = "Please specify product Quantity to be able to add it to Basket ";
-                }
-                else
-                {
+                
                     // check if the product quantity is greater than quantity to be added in the cart
                     if (ProdSaveToBasket.ProductQuantity >= productCount)
                     {
@@ -157,6 +151,7 @@ namespace MEWeb.Products
                             cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
                             cartItem.Price = ProdSaveToBasket.Price;
                             cartItem.Quantity = productCount;
+                            cartItem.IsActiveInd = true;
                             cartItem.Value = productCount * ProdSaveToBasket.Price;
                             //save to object
                             cartItemList.Add(cartItem);
@@ -244,6 +239,7 @@ namespace MEWeb.Products
                                 cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
                                 cartItem.Price = ProdSaveToBasket.Price;
                                 cartItem.Quantity = productCount;
+                                cartItem.IsActiveInd = true;
                                 cartItem.Value += ProdSaveToBasket.Price * productCount;
 
                                 //save the cart item
@@ -264,7 +260,6 @@ namespace MEWeb.Products
                         result.ErrorText = "No Enough Quantity In Stock";
                     }
 
-                }
 
             }
             catch (Exception e)
