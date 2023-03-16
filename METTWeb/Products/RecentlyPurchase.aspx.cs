@@ -13,21 +13,23 @@ namespace MEWeb.Products
     }
     public class RecentlyPurchaseVM : MEStatelessViewModel<RecentlyPurchaseVM>
     {
+        public MELib.Products.ProductList ProductList { get; set; }
         public MELib.Carts.CartList CartList { get; set; }
         public MELib.Carts.CartItemList CartItemList { get; set; }
     
-
         public RecentlyPurchaseVM()
         {
 
         }
         protected override void Setup()
         {
+            ProductList = MELib.Products.ProductList.GetProductList();
             var cartById = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
 
             var cartId = cartById.FirstOrDefault().CartID;
 
             CartItemList = MELib.Carts.CartItemList.GetCartItemByCartId(cartId);
+
         }
         //filter product category 
         [WebCallable]

@@ -26,12 +26,13 @@ namespace MEWeb.Products
         public String ProductName { get; set; }
         public int ProductQuantity { get; set; }
         public int Quantity { get; set; }
+        public int productCount { get; set; } = 1;
 
         /// <summary>
         /// Gets or sets the Movie Genre ID
         /// </summary>
         /// 
-        
+
         [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), UnselectedText = "Select", ValueMember = "ProductCategoryId", DisplayMember = "ProductCategoryName")]
         [Display(Name = "ProductCategoryName")]
         public int? ProductCategoryId { get; set; }
@@ -96,9 +97,8 @@ namespace MEWeb.Products
                 sr.Success = false;
             }
         }
-        public static Result AddToBasket(int ProductID, ProductList productlist)
+        public static Result AddToBasket(int ProductID, int productCount ,  ProductList productlist)
         {
-            int productCount = 1;
             Result result = new Result();
             try
             {
@@ -119,146 +119,150 @@ namespace MEWeb.Products
                 MELib.Carts.CartItemList cartItemList = MELib.Carts.CartItemList.NewCartItemList();
 
                 //get product by id
-                var cartItemExists = MELib.Carts.CartItemList.GetCartItemByProductId(ProductID).FirstOrDefault();
+                var cartItemExist = MELib.Carts.CartItemList.GetCartItemByProductId(ProductID);
+                var cartItemExists = cartItemExist.FirstOrDefault();
+                //get product by id
+                // var cartItemExists = MELib.Carts.CartItemList.GetCartItemList().GetItem(ProductID);
+                // var cartItemsExists = cartItems.GetItem(ProductID);
                 // MELib.Carts.CartItemList cartListItem = MELib.Carts.CartItemList.GetCartItemList;
 
                 //get the cart of logged in user 
                 var cartExists = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault();
-                
-                    // check if the product quantity is greater than quantity to be added in the cart
-                    if (ProdSaveToBasket.ProductQuantity >= productCount)
-                    {
-                        // if the cart user does not have cart create a new cart
-                        if (cartExists == null)
-                        {
-                            // Add new cart
-                            cart.Quantity = productCount;
-                            cart.IsActiveInd = true;
-                            cart.UserID = Singular.Security.Security.CurrentIdentity.UserID;
-                            cart.TotalAmount = productCount * ProdSaveToBasket.Price;
-                            cart.DateCreated = DateTime.Now;
-                            //save to object
-                            currentUserCartList.Add(cart);
 
-                            //save to database
+                // check if the product quantity is greater than quantity to be added in the cart
+                if (ProdSaveToBasket.ProductQuantity >= productCount)
+                {
+                    // if the cart user does not have cart create a new cart
+                    if (cartExists == null)
+                    {
+                        // Add new cart
+                        cart.Quantity = productCount;
+                        cart.IsActiveInd = true;
+                        cart.UserID = Singular.Security.Security.CurrentIdentity.UserID;
+                        cart.TotalAmount = productCount * ProdSaveToBasket.Price;
+                        cart.DateCreated = DateTime.Now;
+                        //save to object
+                        currentUserCartList.Add(cart);
+
+                        //save to database
+                        currentUserCartList.Save();
+
+                        //add to cart item
+                        cartItem.ProductId = ProdSaveToBasket.ProductID;
+                        cartItem.ProductName = ProdSaveToBasket.ProductName;
+                        cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
+                        cartItem.CartID = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault().CartID;
+                        cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
+                        cartItem.Price = ProdSaveToBasket.Price;
+                        cartItem.Quantity = productCount;
+                        cartItem.IsActiveInd = true;
+                        cartItem.Value = productCount * ProdSaveToBasket.Price;
+                        //save to object
+                        cartItemList.Add(cartItem);
+
+                        //save to database
+                        cartItemList.Save();
+                        //subtract products from the database
+                        ProductSubtract(Convert.ToInt32(cartItem.ProductId), productCount);
+
+                    }
+                    // if the cart exists, update the cart
+                    else
+                    {
+                        //// if the cart is not active
+                        //if (cartExists.IsActiveInd == false)
+                        //{
+
+                        //    // Activate the isActive property and update the 
+                        //    cartExists.IsActiveInd = true;
+                        //    cartExists.Quantity = productCount;
+                        //    cartExists.TotalAmount = productCount * ProdSaveToBasket.Price;
+                        //    cartExists.DateModified = DateTime.Now;
+                        //    //save to object
+
+                        //    //save to database
+                        //    cartExists.TrySave(typeof(CartList));
+
+                        //    //add to cart item
+                        //    cartItem.ProductId = ProdSaveToBasket.ProductID;
+                        //    cartItem.ProductName = ProdSaveToBasket.ProductName;
+                        //    cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
+                        //    cartItem.CartID = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault().CartID;
+                        //    cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
+                        //    cartItem.Price = ProdSaveToBasket.Price;
+                        //    cartItem.Quantity = productCount;
+                        //    cartItem.Value = productCount * ProdSaveToBasket.Price;
+                        //    //save to object
+                        //    cartItemList.Add(cartItem);
+
+                        //    //save to database
+                        //    cartItemList.Save();
+                        //    //subtract products from the database
+                        //    ProductSubtract(Convert.ToInt32(cartItem.ProductId), productCount);
+                        //}
+
+                        // check if the cart to be added exists in the cartItem, if exists update the product
+                        // alse edit the cart quantity and total amount
+                        if (cartItemExists != null)
+                        {
+                            // update the cart quantity and total amount
+                            cartExists.Quantity += productCount;
+                            cartExists.TotalAmount = cartExists.TotalAmount + cartItemExists.Value;
+
+                            currentUserCartList.Add(cartExists);
                             currentUserCartList.Save();
 
-                            //add to cart item
+                            // update the cart item
+                            cartItemExists.Quantity += productCount;
+                            cartItemExists.Value += ProdSaveToBasket.Price * productCount;
+                            cartItemList.Add(cartItemExists);
+                            cartItemList.Save();
+
+
+                            //subtract products from the database
+                            ProductSubtract(ProductID, productCount);
+
+
+                        }
+
+                        //if the product does not exist, add it in the cart items
+                        else
+                        {
+
+                            // update the cart quantity and total amount
+                            cartExists.Quantity += productCount;
+                            cartExists.TotalAmount += productCount * ProdSaveToBasket.Price;
+                            currentUserCartList.Add(cartExists);
+                            currentUserCartList.Save();
+
+                            // Add the item in the cartItem
                             cartItem.ProductId = ProdSaveToBasket.ProductID;
                             cartItem.ProductName = ProdSaveToBasket.ProductName;
                             cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
-                            cartItem.CartID = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault().CartID;
+                            cartItem.CartID = cartExists.CartID;
                             cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
                             cartItem.Price = ProdSaveToBasket.Price;
                             cartItem.Quantity = productCount;
                             cartItem.IsActiveInd = true;
-                            cartItem.Value = productCount * ProdSaveToBasket.Price;
-                            //save to object
+                            cartItem.Value += ProdSaveToBasket.Price * productCount;
+
+                            //save the cart item
                             cartItemList.Add(cartItem);
-
-                            //save to database
                             cartItemList.Save();
+
+
                             //subtract products from the database
-                            ProductSubtract(Convert.ToInt32(cartItem.ProductId), productCount);
+                            ProductSubtract(ProductID, productCount);
 
                         }
-                        // if the cart exists, update the cart
-                        else
-                        {
-                            //// if the cart is not active
-                            //if (cartExists.IsActiveInd == false)
-                            //{
-
-                            //    // Activate the isActive property and update the 
-                            //    cartExists.IsActiveInd = true;
-                            //    cartExists.Quantity = productCount;
-                            //    cartExists.TotalAmount = productCount * ProdSaveToBasket.Price;
-                            //    cartExists.DateModified = DateTime.Now;
-                            //    //save to object
-
-                            //    //save to database
-                            //    cartExists.TrySave(typeof(CartList));
-
-                            //    //add to cart item
-                            //    cartItem.ProductId = ProdSaveToBasket.ProductID;
-                            //    cartItem.ProductName = ProdSaveToBasket.ProductName;
-                            //    cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
-                            //    cartItem.CartID = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault().CartID;
-                            //    cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
-                            //    cartItem.Price = ProdSaveToBasket.Price;
-                            //    cartItem.Quantity = productCount;
-                            //    cartItem.Value = productCount * ProdSaveToBasket.Price;
-                            //    //save to object
-                            //    cartItemList.Add(cartItem);
-
-                            //    //save to database
-                            //    cartItemList.Save();
-                            //    //subtract products from the database
-                            //    ProductSubtract(Convert.ToInt32(cartItem.ProductId), productCount);
-                            //}
-
-                            // check if the cart to be added exists in the cartItem, if exists update the product
-                            // alse edit the cart quantity and total amount
-                            if (cartItemExists != null)
-                            {
-                                // update the cart quantity and total amount
-                                cartExists.Quantity += productCount;
-                                cartExists.TotalAmount = cartExists.TotalAmount + cartItemExists.Value;
-
-                                currentUserCartList.Add(cartExists);
-                                currentUserCartList.Save();
-
-                                // update the cart item
-                                cartItemExists.Quantity += productCount;
-                                cartItemExists.Value += ProdSaveToBasket.Price * productCount;
-                                cartItemList.Add(cartItemExists);
-                                cartItemList.Save();
-
-
-                                //subtract products from the database
-                                ProductSubtract(ProductID, productCount);
-
-
-                            }
-
-                            //if the product does not exist, add it in the cart items
-                            else
-                            {
-
-                                // update the cart quantity and total amount
-                                cartExists.Quantity += productCount;
-                                cartExists.TotalAmount += productCount * ProdSaveToBasket.Price;
-                                currentUserCartList.Add(cartExists);
-                                currentUserCartList.Save();
-
-                                // Add the item in the cartItem
-                                cartItem.ProductId = ProdSaveToBasket.ProductID;
-                                cartItem.ProductName = ProdSaveToBasket.ProductName;
-                                cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
-                                cartItem.CartID = cartExists.CartID;
-                                cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
-                                cartItem.Price = ProdSaveToBasket.Price;
-                                cartItem.Quantity = productCount;
-                                cartItem.IsActiveInd = true;
-                                cartItem.Value += ProdSaveToBasket.Price * productCount;
-
-                                //save the cart item
-                                cartItemList.Add(cartItem);
-                                cartItemList.Save();
-
-
-                                //subtract products from the database
-                                ProductSubtract(ProductID, productCount);
-
-                            }
-                        }
-                        //saving
-                        result.Success = true;
                     }
-                    else
-                    {
-                        result.ErrorText = "No Enough Quantity In Stock";
-                    }
+                    //saving
+                    result.Success = true;
+                }
+                else
+                {
+                    result.ErrorText = "No Enough Quantity In Stock";
+                }
 
 
             }

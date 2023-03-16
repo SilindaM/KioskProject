@@ -87,22 +87,7 @@
                                                                     var JobDescriptionText = JobDescription.Helpers.Span(c => c.UserName);
                                                                     JobDescriptionText.Style.FontSize = "15px";
                                                                 }
-
-                                                                //var Actions = ProfileListRow.AddColumn("Actions");
-                                                                //{
-                                                                //    Actions.Style.Width = "75px";
-                                                                //    // Add Buttons
-                                                                //    var btnView = Actions.Helpers.Button("Edit", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
-                                                                //    {
-                                                                //        btnView.AddClass("btn btn-primary btn-outline");
-                                                                //        btnView.AddBinding(Singular.Web.KnockoutBindingString.click, "GenerateInterventionRpt($data)");
-                                                                //    }
-                                                                //    //var btnDelete = Actions.Helpers.Button("Save", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
-                                                                //    //{
-                                                                //    //    btnDelete.AddClass("btn btn-primary btn-outline");
-                                                                //    //    btnDelete.AddBinding(Singular.Web.KnockoutBindingString.click, "GenerateInterventionRpt($data)");
-                                                                //    //}
-                                                                //}
+                                                                
                                                             }
                                                         }
                                                     }
@@ -138,26 +123,7 @@
                                                 {
                                                     var LeftColContentDiv = LeftRowContentDiv.Helpers.DivC("col-md-12 text-center");
                                                     {
-
-                                                        //var ProfileDiv = LeftColContentDiv.Helpers.With<MELib.Accounts.Account>(c => c.UserAccount);
-                                                        //{
-
-                                                        //    //    //   var Profile = ProfileDiv.Helpers.HTML("<div class='circlecenter'><div class='circlecontaineruser circlecenter'><span class='fa fa-user fa-lg fa-fw' style='font-size:64px;'></span></div></div>");
-
-                                                        //    //    var AccountNo = ProfileDiv.Helpers.Span(c => "Account NO : " + c.AccountID);
-                                                        //    //    AccountNo.Style.FontSize = "20px";
-                                                        //    //    ProfileDiv.Helpers.HTMLTag("br");
-                                                        //    //    var Balance = ProfileDiv.Helpers.Span(c => "Balance      : R " + c.Balance);
-                                                        //    //    Balance.Style.FontSize = "20px";
-                                                        //    //    ProfileDiv.Helpers.HTMLTag("br");
-                                                        //    //    var UserName = ProfileDiv.Helpers.Span(c => "User Name   : " + ViewModel.LoggedInUserName);
-                                                        //    //    UserName.Style.FontSize = "20px";
-                                                        //    //    ProfileDiv.Helpers.HTMLTag("br");
-                                                        //    //    //var accType = ProfileDiv.Helpers.Span(c => "Account Type : " + c.AccountTypeName);
-                                                        //    //    //ProfileDiv.Helpers.HTMLTag("br");
-                                                        //    //    //accType.Style.FontSize = "20px";
-                                                        //    //}
-                                                        //}
+\
                                                         var RightColContentDiv = LeftRowContentDiv.Helpers.DivC("col-md-12 text-center");
                                                         {
                                                             // Fund Account Button
@@ -166,12 +132,6 @@
                                                                 FundAccountBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "DepositFunds()");
                                                                 FundAccountBtn.AddClass("btn btn-primary btn-outline");
                                                             }
-                                                            // Edit Profile
-                                                            //var EditProfileBtn = RightColContentDiv.Helpers.Button("Edit Profile", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
-                                                            //{
-                                                            //    EditProfileBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "EditProfile()");
-                                                            //    EditProfileBtn.AddClass("btn btn-primary btn-outline");
-                                                            //}
                                                         }
                                                     }
                                                 }

@@ -50,9 +50,8 @@ namespace MELib.Carts
             public Criteria()
             {
             }
-            public Criteria(int? ProductId, int? cartId)
+            public Criteria( int? cartId)
             {
-                this.ProductId = ProductId;
                 this.CartId = cartId;
             }
 
@@ -72,7 +71,7 @@ namespace MELib.Carts
         {
             return DataPortal.Fetch<CartItemList>(new Criteria());
         }
-        public static CartItemList GetCartItemByProductId(int? ProductId)
+        public static CartItemList GetCartItemByProductId(int ProductId)
         {
             return DataPortal.Fetch<CartItemList>(new Criteria { ProductId = ProductId });
         }

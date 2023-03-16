@@ -27,7 +27,7 @@ namespace MEWeb.Products
         public int CartID { get; set; }
         public String ProductName { get; set; }
         public int ProductQuantity { get; set; }
-        public int Quantity { get; set; } 
+        public int Quantity { get; set; }
 
 
         /// <summary>
@@ -54,12 +54,12 @@ namespace MEWeb.Products
 
         //filter product category 
         [WebCallable]
-        public Result FilterProducts(int ProductCategoryId,int ResetInd)
+        public Result FilterProducts(int ProductCategoryId, int ResetInd)
         {
             Result sr = new Result();
             try
             {
-               if(ResetInd == 0)
+                if (ResetInd == 0)
                 {
                     sr.Data = MELib.Products.ProductList.GetProductByCategoryId(ProductCategoryId);
                     sr.Success = true;
@@ -216,7 +216,7 @@ namespace MEWeb.Products
                                 // update the cart quantity and total amount
                                 cartExists.Quantity += productCount;
                                 cartExists.TotalAmount = cartExists.TotalAmount + cartItemExists.Value;
-                                
+
                                 currentUserCartList.Add(cartExists);
                                 currentUserCartList.Save();
 

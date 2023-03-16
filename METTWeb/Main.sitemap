@@ -13,6 +13,7 @@
 
     <siteMapNode title="Products" roles="About.Access" description="fa fa-file-o fa-lg fa-fw">
       <siteMapNode title="All Products" roles="About.Access" url="~/Products/TopProducts.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
+      <siteMapNode title="Most Wanted Products" roles="About.Access" url="~/Products/RecentlyPurchase.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
     </siteMapNode>
     
 
