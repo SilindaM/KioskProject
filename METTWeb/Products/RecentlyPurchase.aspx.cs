@@ -14,11 +14,8 @@ namespace MEWeb.Products
     public class RecentlyPurchaseVM : MEStatelessViewModel<RecentlyPurchaseVM>
     {
         public MELib.Products.ProductList ProductList { get; set; }
-        public MELib.Carts.CartList CartList { get; set; }
-        public MELib.Carts.CartItemList CartItemList { get; set; }
 
-        public MELib.Orders.OrderDetailList topselling { get; set; }
-        public MELib.Orders.OrderDetailList topsealling { get; set; }
+        public MELib.Orders.OrderDetailList OrderDetailList { get; set; }
 
         public int tops { get; set; }
 
@@ -28,16 +25,16 @@ namespace MEWeb.Products
         }
         protected override void Setup()
         {
-           topselling = MELib.Orders.OrderDetailList.GetOrderDetailList();
-           var topSellingItem = topselling.OrderByDescending(x => x.Quantity).FirstOrDefault();
-           tops = topSellingItem?.Quantity ?? 0;
+            
+         
 
-            //ProductList = MELib.Products.ProductList.GetProductList();
-            //var cartById = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
-            //var cartId = cartById.FirstOrDefault().CartID;
-            //CartItemList = MELib.Carts.CartItemList.GetCartItemByCartId(cartId);
+            ProductList = MELib.Products.ProductList.GetProductList();
+            var orderById = MELib.Orders.OrderList.GetOrderByUserId(Singular.Security.Security.CurrentIdentity.UserID);
+            var cartId = orderById.LastOrDefault().OrderID;
+            OrderDetailList = MELib.Orders.OrderDetailList.GetOrderDetailByOrderID(cartId);
 
         }
+
         //filter product category 
         [WebCallable]
         public Result FilterProducts(int ProductCategoryId, int ResetInd)

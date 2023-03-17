@@ -33,10 +33,12 @@ namespace MELib.Products
 
         public static PropertyInfo<int> ProductCategoryIdProperty = RegisterProperty<int>(c => c.ProductCategoryId, "Product Category", 0);
         /// <summary>
-        /// Gets and sets the Product Category value
+        /// Gets and sets the Movie Genre value
         /// </summary>
-        [Display(Name = "Product Category", Description = "Foreign Key - Product Category ID"),
-        Required(ErrorMessage = "Product Category required")]
+        [Display(Name = "Product Category", Description = "Movie Genre ID"),
+        Required(ErrorMessage = "Movie Genre required"),
+         Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), ValueMember = "ProductCategoryId", DisplayMember = "ProductCategoryName")]
+
         public int ProductCategoryId
         {
             get { return GetProperty(ProductCategoryIdProperty); }

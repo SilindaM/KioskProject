@@ -34,11 +34,7 @@
                     {
                       var FirstRow = MoviesDiv.FirstRow;
                       {
-                        var MovieTitle = FirstRow.AddColumn("TransactionID");
-                        {
-                          var MovieTitleText = MovieTitle.Helpers.Span(c => c.TransactionID);
-                          MovieTitle.Style.Width = "250px";
-                        }
+                       
                         var MovieDescription = FirstRow.AddColumn("Transaction Name");
                         {
                           var MovieDescriptionText = MovieDescription.Helpers.Span(c => c.Description);

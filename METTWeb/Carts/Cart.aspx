@@ -67,8 +67,6 @@
                                                 }
                                             }
 
-
-
                                         }
                                     }
                                 }
@@ -99,7 +97,7 @@
                                                     {
 
                                                         MovieGenreContentDiv.Helpers.HTML().Heading5("Select Delivery Method");
-                                                        MovieGenreContentDiv.Helpers.HTML().Heading5("R50 Delivery, Collection is F");
+                                                        MovieGenreContentDiv.Helpers.HTML().Heading5("R50 Delivery, Collection is R 0");
                                                         var ReleaseFromDateEditor = MovieGenreContentDiv.Helpers.EditorFor(c => ViewModel.OrderTypeId);
                                                         ReleaseFromDateEditor.AddClass("form-control marginBottom20");
 
