@@ -16,19 +16,26 @@ namespace MEWeb.Products
         public MELib.Products.ProductList ProductList { get; set; }
         public MELib.Carts.CartList CartList { get; set; }
         public MELib.Carts.CartItemList CartItemList { get; set; }
-    
+
+        public MELib.Orders.OrderDetailList topselling { get; set; }
+        public MELib.Orders.OrderDetailList topsealling { get; set; }
+
+        public int tops { get; set; }
+
         public RecentlyPurchaseVM()
         {
 
         }
         protected override void Setup()
         {
-            ProductList = MELib.Products.ProductList.GetProductList();
-            var cartById = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
+           topselling = MELib.Orders.OrderDetailList.GetOrderDetailList();
+           var topSellingItem = topselling.OrderByDescending(x => x.Quantity).FirstOrDefault();
+           tops = topSellingItem?.Quantity ?? 0;
 
-            var cartId = cartById.FirstOrDefault().CartID;
-
-            CartItemList = MELib.Carts.CartItemList.GetCartItemByCartId(cartId);
+            //ProductList = MELib.Products.ProductList.GetProductList();
+            //var cartById = MELib.Carts.CartList.GetCartByUserID(Singular.Security.Security.CurrentIdentity.UserID);
+            //var cartId = cartById.FirstOrDefault().CartID;
+            //CartItemList = MELib.Carts.CartItemList.GetCartItemByCartId(cartId);
 
         }
         //filter product category 

@@ -112,22 +112,13 @@
 
    
 
-    var WatchMovie = function (obj) {
+   var RentMovie = function (obj) {
 
-      MEHelpers.QuestionDialogYesNo("Are you sure you would like to watch this movie?", 'center',
-        function () { // Yes
-          ViewModel.CallServerMethod('WatchMovie', { MovieID: obj.MovieID(), ShowLoadingBar: true }, function (result) {
-            if (result.Success) {
-              MEHelpers.Notification("Item deleted successfully.", 'center', 'success', 5000);
-            }
-            else {
-              MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
-            }
-          })
-        },
-        function () { // No
-        })
-    };
+
+      window.open("<%=VirtualPathUtility.ToAbsolute("~/Movies/Movie.aspx?MovieID=")%>" + obj.MovieID(), "_blank")
+
+        }
+
 
     var FilterMovies = function (obj) {
       // alert('Movie Genre ID ' + obj.MovieGenreID());

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Movie.aspx.cs" Inherits="MEWeb.Movies.Movie" %>
+﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Movie.aspx.cs" Inherits="MEWeb.Movies.Movie" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
   <!-- Add page specific styles and JavaScript classes below -->
@@ -59,17 +59,15 @@
                                               var MovieContentDiv = ContentDiv.Helpers.DivC("row");
                                               {
                                                   var MovieDiv = MovieContentDiv.Helpers.DivC("col-md-12 text-center");
-                                                  {
-                                                      var MoviewInfo = MovieDiv.Helpers.ForEach<MELib.Movies.Movie>(c => c.MovieList);
-                                                      // Place Content Here
-                                                      var MovieTitle = MovieDiv.Helpers.Span(c => "R " + c.MovieID);
-                                                      MovieTitle.Style.FontSize = "15px";
-                                                      MovieDiv.Helpers.HTMLTag("br");
-
-                                                      var Description = MovieDiv.Helpers.Span(c => ViewModel.MovieID);
-                                                      Description.Style.FontSize = "15px";
-                                                      MovieDiv.Helpers.HTMLTag("br");
-
+                                                  { var MovieInfo = MovieDiv.Helpers.ForEach<MELib.Movies.Movie>(c=> c.MovieList);
+                                                      // Place holder
+                                                      MovieInfo.Helpers.HTML("<br> </br>");
+                                                      MovieInfo.Helpers.Span(c => c.MovieTitle).Style.FontSize= "20px";
+                                                      MovieInfo.Helpers.HTML("<br> </br>");
+                                                      MovieInfo.Helpers.Span(c => c.MovieDescription);
+                                                      MovieDiv.Helpers.HTML("<h3>Preview</h3>");
+                                                      MovieInfo.Helpers.HTML("<br> </br>");
+                                                      MovieDiv.Helpers.HTML("<p></p>");
                                                       var VideoContainer = MovieDiv.Helpers.HTMLTag("video controls");
                                                       {
                                                           VideoContainer.Helpers.HTML("<source src='../Media/Videos/Silver Fox Intro.mp4' type='video/mp4'>");
@@ -78,7 +76,7 @@
                                                       // Rent Movie
                                                       var RentMovieBtn = MovieDiv.Helpers.Button("Pay & Watch", Singular.Web.ButtonMainStyle.NoStyle, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
                                                       {
-                                                          RentMovieBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "RentMovie($data)");
+                                                          RentMovieBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "RentNow($data)");
                                                           RentMovieBtn.AddClass("btn btn-primary");
                                                       }
                                                   }
@@ -107,16 +105,17 @@
       $("#menuItem1").addClass('active');
       $("#menuItem1 > ul").addClass('in');
     });
-   var RentMovie = function (obj) {
-      ViewModel.CallServerMethod('RentMovie', { MovieID: obj.MovieID(), ShowLoadingBar: true }, function (result) {
-        if (result.Success) {
-          window.location = result.Data;
-        }
-        else {
-          MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
-        }
-      })
-    }
 
+      var RentNow = function (obj) {
+          ViewModel.CallServerMethod('RentNow', { MovieID: obj.MovieID(), ShowLoadingBar: true }, function (result) {
+              if (result.Success) {
+                  MEHelpers.Notification("Movie was paid for successfully", 'center', 'success', 6000);
+                  window.location = '../Account/Home.aspx';
+              }
+              else {
+                  MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+              }
+          });
+      }
   </script>
 </asp:Content>

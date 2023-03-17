@@ -7,7 +7,7 @@
   <style>
     .product-border {
       border-radius: 5px;
-      border: 2px solid #DEDEDE;
+      border: 2px solid #332626;
       padding: 15px;
       margin: 5px;
     }
@@ -27,7 +27,7 @@
       display: block;
       padding-bottom: 5px;
       font-size : 20px;
-      background : #000000;
+      border : #000000;
       margin-right : 5px;
       border-radius: 5px;
       margin-left : 5px;
@@ -99,11 +99,10 @@
                                                           // MoviesWatchedDiv.Helpers.HTML("<span data-bind=\"text: $data.MovieGenreID() \"  class='caption'></span>");
 
                                                       }
-                                                      var WatchBtn = MoviesWatchedDiv.Helpers.Button("Add To Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                      var WatchBtn = MoviesWatchedDiv.Helpers.Button("Add To Cart", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.shoppingCart);
                                                       {
                                                           WatchBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "AddToBasket($data)");
-                                                          WatchBtn.AddClass("btn btn-primary");
-                                                          WatchBtn.AddClass("btn btn-primary btn-block");
+                                                          WatchBtn.AddClass("btn btn-success btn-block");
                                                       }
                                                       MoviesWatchedDiv.Helpers.HTML("</div>");
                                                   }

@@ -101,9 +101,7 @@
                                                                        Action.Style.Width = "60px";
                                                                    }
                                                                }
-
                                                            }
-
                                                        }
                                                    }
                                                }
@@ -111,8 +109,6 @@
 
                                        }
                                    }
-
-
                                    var RowColRight = Row.Helpers.DivC("col-md-3");
                                    {
 
@@ -144,17 +140,17 @@
                                                                    FilterBtn.AddClass("btn btn-primary btn-outline  marginBottom20  btn-block ");
                                                                }
                                                    }
-                                                   var MovieGenreContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
+                                                   var ProductContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                    {
-                                                       var ReleaseFromDateEditor = MovieGenreContentDiv.Helpers.EditorFor(c => ViewModel.ProductCategoryId);
+                                                       var ReleaseFromDateEditor = ProductContentDiv.Helpers.EditorFor(c => ViewModel.ProductCategoryId);
                                                        ReleaseFromDateEditor.AddClass("form-control marginBottom20 ");
 
-                                                       var FilterBtn = MovieGenreContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       var FilterBtn = ProductContentDiv.Helpers.Button("Apply Filter", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
                                                        {
                                                            FilterBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterProducts($data)");
                                                            FilterBtn.AddClass("btn btn-primary btn-outline");
                                                        }
-                                                       var ResetBtn = MovieGenreContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
+                                                       var ResetBtn = ProductContentDiv.Helpers.Button("Reset", Singular.Web.ButtonMainStyle.Primary, Singular.Web.ButtonSize.Normal, Singular.Web.FontAwesomeIcon.None);
                                                        {
                                                            ResetBtn.AddBinding(Singular.Web.KnockoutBindingString.click, "FilterReset($data)");
                                                            ResetBtn.AddClass("btn btn-primary btn-outline");

@@ -82,7 +82,7 @@
 
                                                     var ColContentDiv = RowContentDiv.Helpers.DivC("col-md-12");
                                                     {
-                                                        var MoviesWatchedDiv = ColContentDiv.Helpers.ForEach<MELib.Carts.CartItemList>(c => c.CartItemList);
+                                                        var MoviesWatchedDiv = ColContentDiv.Helpers.ForEach<MELib.Orders.OrderDetailList>(c => c.tops);
                                                         {
 
                                                             // Using Knockout Binding

@@ -31,11 +31,9 @@ namespace MEWeb.Products
 
 
         /// <summary>
-        /// Gets or sets the Movie Genre ID
+        /// Gets or sets the ProductCategoryName
         /// </summary>
         /// 
-
-
         [Singular.DataAnnotations.DropDownWeb(typeof(MELib.RO.ROProductCategoryList), UnselectedText = "Select", ValueMember = "ProductCategoryId", DisplayMember = "ProductCategoryName")]
         [Display(Name = "ProductCategoryName")]
         public int? ProductCategoryId { get; set; }
@@ -79,7 +77,11 @@ namespace MEWeb.Products
             }
             return sr;
         }
-        //method to subtract qunatity in the database
+        /// <summary>
+        /// Method to Subtract products
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="productCount"></param>
         public static void ProductSubtract(int productId, int productCount)
         {
             Result sr = new Result();
@@ -102,7 +104,14 @@ namespace MEWeb.Products
                 sr.Success = false;
             }
         }
-        public static Result AddToBasket(int ProductID, int productCount, ProductList productlist)
+        /// <summary>
+        /// Method To Add Product To Cart
+        /// </summary>
+        /// <param name="ProductID"></param>
+        /// <param name="productCount"></param>
+        /// <param name="productlist"></param>
+        /// <returns></returns>
+        public static Result AddToCart(int ProductID, int productCount, ProductList productlist)
         {
             Result result = new Result();
             try
@@ -177,38 +186,6 @@ namespace MEWeb.Products
                         // if the cart exists, update the cart
                         else
                         {
-                            //// if the cart is not active
-                            //if (cartExists.IsActiveInd == false)
-                            //{
-
-                            //    // Activate the isActive property and update the 
-                            //    cartExists.IsActiveInd = true;
-                            //    cartExists.Quantity = productCount;
-                            //    cartExists.TotalAmount = productCount * ProdSaveToBasket.Price;
-                            //    cartExists.DateModified = DateTime.Now;
-                            //    //save to object
-
-                            //    //save to database
-                            //    cartExists.TrySave(typeof(CartList));
-
-                            //    //add to cart item
-                            //    cartItem.ProductId = ProdSaveToBasket.ProductID;
-                            //    cartItem.ProductName = ProdSaveToBasket.ProductName;
-                            //    cartItem.ProductImage = ProdSaveToBasket.ProductImageURL;
-                            //    cartItem.CartID = MELib.Carts.CartList.GetCartByID(currentuser).FirstOrDefault().CartID;
-                            //    cartItem.ProductDescription = ProdSaveToBasket.ProductDescription;
-                            //    cartItem.Price = ProdSaveToBasket.Price;
-                            //    cartItem.Quantity = productCount;
-                            //    cartItem.Value = productCount * ProdSaveToBasket.Price;
-                            //    //save to object
-                            //    cartItemList.Add(cartItem);
-
-                            //    //save to database
-                            //    cartItemList.Save();
-                            //    //subtract products from the database
-                            //    ProductSubtract(Convert.ToInt32(cartItem.ProductId), productCount);
-                            //}
-
                             // check if the cart to be added exists in the cartItem, if exists update the product
                             // alse edit the cart quantity and total amount
                             if (cartItemExists != null && cartExists.IsActiveInd.Equals(true))
@@ -229,8 +206,7 @@ namespace MEWeb.Products
 
                                 //subtract products from the database
                                 ProductSubtract(ProductID, productCount);
-
-
+                                
                             }
 
                             //if the product does not exist, add it in the cart items

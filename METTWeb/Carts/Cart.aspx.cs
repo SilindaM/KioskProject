@@ -206,8 +206,8 @@ namespace MEWeb.Carts
                 if (productCount > oldCartQuantity/*&& newCartQuantity <= products.ProductQuantity*/)
                 // if (productCount > products.ProductQuantity)
                 {
-                    result.Success = false;
                     result.ErrorText = "Sorry only " + products.ProductQuantity.ToString() + " left In Stock";
+                    result.Success = false;
                 }
                 else
                 {
@@ -356,7 +356,6 @@ namespace MEWeb.Carts
                     newOrder.OrderedDate = DateTime.Now;
                     newOrder.CartID = userCart.CartID;
                     newOrder.CompletedBy = currentuser;
-                    newOrder.OrderTypeId = orderTypeId;
 
                     // create new transaction
                     newTransaction.TransactionTypeID = 3;
@@ -374,11 +373,13 @@ namespace MEWeb.Carts
 
                         newOrder.OrderAmount = orderAmount;
                         newTransaction.Amount = orderAmount;
+                        newOrder.OrderTypeId = orderTypeId;
                         newTransaction.NewBalance = account.Balance - orderAmount;
                     }
                     //if is collection don't add delivery fee
                     else
                     {
+                        newOrder.OrderTypeId = 2;
                         newOrder.OrderAmount = userCart.TotalAmount;
                         newTransaction.Amount = userCart.TotalAmount;
                         newTransaction.NewBalance = account.Balance - userCart.TotalAmount;
@@ -463,6 +464,7 @@ namespace MEWeb.Carts
                 }
 
             }
+
             catch (Exception e)
             {
                 result.Data = e.InnerException;

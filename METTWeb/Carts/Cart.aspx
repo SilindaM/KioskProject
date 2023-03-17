@@ -177,16 +177,14 @@
       {
           ViewModel.CallServerMethod("UpdateCart", { CartItemID: obj.CartItemID(), ProductId: obj.ProductId(), productCount: obj.Quantity(), CartItemList: ViewModel.CartItemList.Serialise(), ShowLoadingBar: true }, function (result) {
            if (result.Success) {
-                  alert('Cart Updated  Successfully');
+               alert('Cart Updated  Successfully');
                Singular.AddMessage(3, 'Save', 'Updated Successfully.').Fade(2000);
-               
-                             location.reload();
+               location.reload();
               }
               else {
                   Singular.AddMessage(1, 'Error', result.ErrorText).Fade(2000);
-                  // MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
-               
-                             location.reload();
+               MEHelpers.Notification(result.ErrorText, 'center', 'warning', 5000);
+               location.reload();
               }
           });
       }

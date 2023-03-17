@@ -15,14 +15,16 @@
       <siteMapNode title="All Products" roles="About.Access" url="~/Products/TopProducts.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
       <siteMapNode title="Most Wanted Products" roles="About.Access" url="~/Products/RecentlyPurchase.aspx" description="fa fa-file-o fa-lg fa-fw" ></siteMapNode>
     </siteMapNode>
-    
+
 
     <siteMapNode title="My Account" roles="Account.Access" description="fa fa-user fa-lg fa-fw">
       <siteMapNode title="Profile" roles="Account.Access" url="~/Profile/Profile.aspx" description="fa fa-user fa-lg fa-fw" ></siteMapNode>
       <siteMapNode title="View Transactions" roles="Account.Access" url="~/Profile/Transactions.aspx" description="fa fa-table fa-lg fa-fw" ></siteMapNode>
       <siteMapNode title="Deposit Funds" roles ="Account.Access" url="~/Profile/DepositFunds.aspx" description="fa fa-money fa-lg fa-fw"></siteMapNode>
       <siteMapNode title="View Orders" roles ="Account.Access" url="~/Orders/Orders.aspx" description="fas fa-cart-arrow-down fa-lg fa-fw"></siteMapNode>
+      <siteMapNode title="My Cart" roles ="Account.Access" url="~/Carts/Cart.aspx" description="fas fa-cart-arrow-down fa-lg fa-fw"></siteMapNode>
     </siteMapNode>
+    
 
     <siteMapNode title="General" roles="About.Access" description="fa fa-file-o fa-lg fa-fw">
       <siteMapNode title="Basic Page" roles ="About.Access" url="~/Examples/BasicPage.aspx" description="fa fa-file-o fa-lg fa-fw"></siteMapNode>

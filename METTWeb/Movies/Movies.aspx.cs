@@ -72,7 +72,7 @@ namespace MEWeb.Movies
             Result sr = new Result();
             try
             {
-                sr.Data = MELib.Movies.MovieList.GetMovieList(MovieGenreID);
+                sr.Data = MELib.Movies.MovieList.GetMovieList(null,MovieGenreID);
                 sr.Success = true;
             }
             catch (Exception e)

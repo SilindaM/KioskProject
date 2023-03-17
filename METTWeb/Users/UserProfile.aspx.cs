@@ -5,11 +5,11 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Singular.Web.Data;
-using METTLib.Security;
+using MELib.Security;
 using Singular.Security;
 using Singular.Web;
-using METTLib.ProtectedArea;
-using METTLib.Organisation;
+using MELib.ProtectedArea;
+using METTWeb.Organisation;
 
 namespace METTWeb.Users
 {
@@ -24,7 +24,7 @@ namespace METTWeb.Users
 	public class UserProfileVM : METTStatelessViewModel<UserProfileVM>
 	{
 
-		public METTLib.Security.User Editinguser { get; set; }
+		public MELib.Security.User Editinguser { get; set; }
 		public SecurityGroupUserList SecurityGroupUserList { get; set; }
 
 		public SecurityGroupProtectedAreaUserList TempSecurityGroupProtectedAreaUserList { get; set; }
@@ -73,7 +73,7 @@ namespace METTWeb.Users
 			if ((Page != null) && (Page.Request.Params["UserID"] != null))
 			{
 				UserID = Convert.ToInt32(Singular.Encryption.DecryptString(System.Web.HttpUtility.UrlDecode(Page.Request.Params["UserID"]).Replace(" ", "+")));
-				Editinguser = UserID != 0 ? METTLib.Security.UserList.GetUserList(UserID).First() : null;
+				Editinguser = UserID != 0 ? MELib.Security.UserList.GetUserList(UserID).First() : null;
 
 				if (Editinguser != null)
 				{
@@ -109,7 +109,7 @@ namespace METTWeb.Users
 						}
 						else
 						{
-							OrganisationProtectedAreaUser = METTLib.ProtectedArea.OrganisationProtectedAreaUser.NewOrganisationProtectedAreaUser();
+							OrganisationProtectedAreaUser = MELib.ProtectedArea.OrganisationProtectedAreaUser.NewOrganisationProtectedAreaUser();
 							OrganisationProtectedAreaUser.OrganisationIDProtectedAreaID = Convert.ToInt32(Singular.Encryption.DecryptString(System.Web.HttpUtility.UrlDecode(Page.Request.Params["OrganisationProtectedAreaID"]).Replace(" ", "+")));
 							OrganisationProtectedAreaUser.UserID = UserID;
 
@@ -189,7 +189,7 @@ namespace METTWeb.Users
 				if (OrganisationUser != null)
 				{
 					UserID = OrganisationUser.UserID;
-					Editinguser = UserID != 0 ? METTLib.Security.UserList.GetUserList(UserID).FirstOrDefault() : null;
+					Editinguser = UserID != 0 ? MELib.Security.UserList.GetUserList(UserID).FirstOrDefault() : null;
 					IsOrganisationUsersInd = true;
 
 					SecurityGroupOrganisationUserList = SecurityGroupOrganisationUserList.GetSecurityGroupOrganisationUserList(UserID, OrganisationID);
@@ -226,7 +226,7 @@ namespace METTWeb.Users
 				{
 					UserID = OrganisationProtectedAreaUser.UserID;
 
-					Editinguser = UserID != 0 ? METTLib.Security.UserList.GetUserList(UserID).FirstOrDefault() : null;
+					Editinguser = UserID != 0 ? MELib.Security.UserList.GetUserList(UserID).FirstOrDefault() : null;
 					IsProtectedAreaUserInd = true;
 
 					//ROSecurityGroupProtectedAreaUserList = ROSecurityGroupProtectedAreaUserList.GetROSecurityGroupProtectedAreaUserList(UserID,ProtectedAreaID);
@@ -254,7 +254,7 @@ namespace METTWeb.Users
 			if (Editinguser == null)
 			{
 				//new user
-				//Editinguser = METTLib.Security.UserList.GetUserList.new
+				//Editinguser = MELib.Security.UserList.GetUserList.new
 			}
 
 		}
@@ -265,13 +265,13 @@ namespace METTWeb.Users
 		/// <param name="userId">The User Id</param>
 		/// <returns>A User instance</returns>
 		[WebCallable]
-		public static METTLib.Security.User GetUser(int userId)
+		public static MELib.Security.User GetUser(int userId)
 		{
-			return METTLib.Security.UserList.GetUserList(userId).First();
+			return MELib.Security.UserList.GetUserList(userId).First();
 		}
 
 		[WebCallable]
-		public Result SaveProtectedAreaSecurityRoles(METTLib.ProtectedArea.SecurityGroupProtectedAreaUserList TempSecurityGroupProtectedAreaUserList)
+		public Result SaveProtectedAreaSecurityRoles(MELib.ProtectedArea.SecurityGroupProtectedAreaUserList TempSecurityGroupProtectedAreaUserList)
 		{
 			Result result= new Result() ;
 

@@ -60,7 +60,7 @@ namespace MEWeb.Examples
         // We cannot save object directly need to add it to a list...
 
 
-        MELib.Movies.MovieList MovieList = MELib.Movies.MovieList.GetMovieList(MovieID);
+        MELib.Movies.MovieList MovieList = MELib.Movies.MovieList.GetMovieList(null,MovieID);
         MovieList.ToList().ForEach(c => { c.IsActiveInd = false; });
         MovieList.TrySave();
 

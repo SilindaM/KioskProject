@@ -37,15 +37,20 @@ namespace MEWeb.Movies
       base.Setup();
       MovieList = MELib.Movies.MovieList.GetMovieList();
     }
-
-    [WebCallable(LoggedInOnly = true)]
-    public string RentMovie(int MovieID)
-    {
-      var url = $"../Movies/Movie.aspx?MovieId={HttpUtility.UrlEncode(Singular.Encryption.EncryptString(MovieID.ToString()))}";
-      return url;
-    }
-
-    [WebCallable]
+        [WebCallable(LoggedInOnly = true)]
+        public string RentMovie(int MovieID)
+        {
+            try
+            {
+                var url = VirtualPathUtility.ToAbsolute("~/Movies/Movie.aspx?MovieID=" + HttpUtility.UrlEncode((MovieID.ToString())));
+                return url;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+        [WebCallable]
     public Result FilterMovies(int MovieGenreID, int ResetInd)
     {
       Result sr = new Result();
@@ -53,7 +58,7 @@ namespace MEWeb.Movies
       {
         if (ResetInd == 0)
         {
-          MELib.Movies.MovieList MovieList = MELib.Movies.MovieList.GetMovieList(MovieGenreID);
+          MELib.Movies.MovieList MovieList = MELib.Movies.MovieList.GetMovieList(null,MovieGenreID);
           sr.Data = MovieList;
         }
         else

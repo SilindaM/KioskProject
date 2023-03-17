@@ -686,7 +686,6 @@
     <Folder Include="Survey\" />
     <Folder Include="TestPages\" />
     <Folder Include="Theme\Singular\Css\Images\Logo\" />
-    <Folder Include="Users\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

@@ -13,112 +13,111 @@ using System.Data.SqlClient;
 
 namespace MELib.Movies
 {
-  [Serializable]
-  public class MovieList
-   : MEBusinessListBase<MovieList, Movie>
-  {
-    #region " Business Methods "
-
-    public Movie GetItem(int MovieID)
-    {
-      foreach (Movie child in this)
-      {
-        if (child.MovieID == MovieID)
-        {
-          return child;
-        }
-      }
-      return null;
-    }
-    public override string ToString()
-    {
-      return "Movies";
-    }
-
-    #endregion
-
-    #region " Data Access "
-
     [Serializable]
-    public class Criteria
-      : CriteriaBase<Criteria>
+    public class MovieList
+     : MEBusinessListBase<MovieList, Movie>
+    {
+        #region " Business Methods "
+
+        public Movie GetItem(int MovieID)
+        {
+            foreach (Movie child in this)
+            {
+                if (child.MovieID == MovieID)
+                {
+                    return child;
+                }
+            }
+            return null;
+        }
+
+        public override string ToString()
+        {
+            return "Movies";
+        }
+
+        #endregion
+
+        #region " Data Access "
+
+        [Serializable]
+        public class Criteria
+          : CriteriaBase<Criteria>
         {
             public int? MovieGenreID = null;
-            public int? MovieID = null;
+            public int MovieID { get; set; }
             public Criteria()
-      {
-      }
+            {
+            }
 
-      public Criteria(int? MovieGenreID)
-      {
-        this.MovieGenreID = MovieGenreID;
-      }
+            public Criteria(int? MovieGenreID, int MovieID)
+            {
+                this.MovieGenreID = MovieGenreID;
+                this.MovieID = MovieID;
+            }
 
-    }
-
-    public static MovieList NewMovieList()
-    {
-      return new MovieList();
-    }
-
-    public MovieList()
-    {
-      // must have parameter-less constructor
-    }
-
-    public static MovieList GetMovieList()
-    {
-      return DataPortal.Fetch<MovieList>(new Criteria());
-    }
-
-        public static MovieList GetMovieList(int? MovieGenreID)
-        {
-            return DataPortal.Fetch<MovieList>(new Criteria { MovieGenreID = MovieGenreID });
         }
 
-        public static MovieList GetMovieById(int? MovieId)
+        public static MovieList NewMovieList()
         {
-            return DataPortal.Fetch<MovieList>(new Criteria { MovieID = MovieId });
+            return new MovieList();
+        }
+
+        public MovieList()
+        {
+            // must have parameter-less constructor
+        }
+
+        public static MovieList GetMovieList()
+        {
+            return DataPortal.Fetch<MovieList>(new Criteria());
+        }
+
+        public static MovieList GetMovieList(int? MovieGenreID, int MovieID)
+        {
+            return DataPortal.Fetch<MovieList>(new Criteria { MovieGenreID = MovieGenreID, MovieID = MovieID });
         }
 
         protected void Fetch(SafeDataReader sdr)
-    {
-      this.RaiseListChangedEvents = false;
-      while (sdr.Read())
-      {
-        this.Add(Movie.GetMovie(sdr));
-      }
-      this.RaiseListChangedEvents = true;
-    }
-
-    protected override void DataPortal_Fetch(Object criteria)
-    {
-      Criteria crit = (Criteria)criteria;
-      using (SqlConnection cn = new SqlConnection(Singular.Settings.ConnectionString))
-      {
-        cn.Open();
-        try
         {
-          using (SqlCommand cm = cn.CreateCommand())
-          {
-            cm.CommandType = CommandType.StoredProcedure;
-            cm.CommandText = "GetProcs.getMovieList";
-            cm.Parameters.AddWithValue("@MovieGenreID", Singular.Misc.NothingDBNull(crit.MovieGenreID));
-            cm.Parameters.AddWithValue("@MovieID", Singular.Misc.NothingDBNull(crit.MovieID));
-
-                        using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
+            this.RaiseListChangedEvents = false;
+            while (sdr.Read())
             {
-              Fetch(sdr);
+                this.Add(Movie.GetMovie(sdr));
             }
-          }
+            this.RaiseListChangedEvents = true;
         }
-        finally
+
+        protected override void DataPortal_Fetch(Object criteria)
         {
-          cn.Close();
+            Criteria crit = (Criteria)criteria;
+            using (SqlConnection cn = new SqlConnection(Singular.Settings.ConnectionString))
+            {
+                cn.Open();
+                try
+                {
+                    using (SqlCommand cm = cn.CreateCommand())
+                    {
+                        cm.CommandType = CommandType.StoredProcedure;
+                        cm.CommandText = "GetProcs.getMovieList";
+
+                        cm.Parameters.AddWithValue("@MovieGenreID", Singular.Misc.NothingDBNull(crit.MovieGenreID));
+                        cm.Parameters.AddWithValue("@MovieID", Singular.Misc.ZeroDBNull(crit.MovieID));
+                        using (SafeDataReader sdr = new SafeDataReader(cm.ExecuteReader()))
+                        {
+                            Fetch(sdr);
+                        }
+                    }
+                }
+                finally
+                {
+                    cn.Close();
+                }
+            }
         }
-      }
+
+        #endregion
+
     }
-    #endregion
-  }
 
 }
