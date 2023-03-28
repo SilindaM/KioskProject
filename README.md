@@ -10,37 +10,34 @@ Users a) When a user logs into the system for the first time they should have th
 
 ## Screenshots
 
-### Landing Page
-Not authenticated users will see a login and sign up buttons, authenticated will only see a "Go to Activities" button.
-<p><img src="assets/landing.png" width="300" /></p>
+### All Products
+Shows all available products in the database that are available, the user can be able to add to cart
+<p><img src="METTWeb/Media/Products/" width="300" /></p>
 
-### Signup/Login
-<p><img src="assets/signup.png" width="600" height="500" /></p>
+### Filter Products By Drinks
+Shows all the drinks that are available 
+<p><img src="assets/AllBread.png" width="600" height="500" /></p>
 
 <p><img src="assets/login.png" width="300" /></p>
 
-### Activities Feed
-Authenticated users can click an activity to view its details, filter by activities they are going to or activities they host.
-they also can view activities from a certain date.
+### Filter Products By Bread
+Shows all the breads that are available 
 <p><img src="assets/activities.png" width="300" /></p>
 
-### Activity Details
-Authenticated user can view the activity information including RSVPs, host, location and date.
-When the user is host, he also can click on edit to change the activity info.
+### Show All Products Added In The CartItem
+Shows all the products added into the cart
 <p><img src="assets/activity.png" width="300" /></p>
 
-### Activity Form
-Authenticated user can access this form when clicking on the navigation bar button "Add activity" to create a new activity,
-or when trying to edit an activity, in this case the activity information will be filled automatically.
-when wrong input is typed, there will be a flashing message to warn the user about it. 
+### Show All Orders With Order Details
+Shows all the orders of a specific user with the details of each order
 <p><img src="assets/activity-form.png" width="300" /></p>
 
-### Profile
-A user can manage his profile or view other users profile, on his own profile he is able to edit his bio, upload photos, choose a profile photo, view his hosted activities and activities he's going to, and also view his followers or following.
+### Deposit
+User can be able to make a deposit
 <p><img src="assets/profile.png" width="300" /></p>
 
-### Upload Image,
-While adding a photo to the current authenticated user, he can drag and drop or choose an image, crop it and get a real time preview of the result. 
+### Transaction,
+Show All the transactions of a use with the description
 <p><img src="assets/photo-upload.png" width="300" /></p>
 
 ## Features
