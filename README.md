@@ -16,29 +16,28 @@ Shows all available products in the database that are available, the user can be
 
 ### Filter Products By Drinks
 Shows all the drinks that are available 
-<p><img src="assets/AllBread.PNG" width="600" height="500" /></p>
+<p><img src="METTWeb/Media/Products/DrinkFilters.PNG" width="600" height="500" /></p>
 
-<p><img src="assets/login.png" width="300" /></p>
 
 ### Filter Products By Bread
 Shows all the breads that are available 
-<p><img src="assets/activities.png" width="300" /></p>
+<p><img src="METTWeb/Media/Products/AllBread.PNG" width="300" /></p>
 
 ### Show All Products Added In The CartItem
 Shows all the products added into the cart
-<p><img src="assets/activity.png" width="300" /></p>
+<p><img src="METTWeb/Media/Products/cartItems.PNG" width="300" /></p>
 
 ### Show All Orders With Order Details
 Shows all the orders of a specific user with the details of each order
-<p><img src="assets/activity-form.png" width="300" /></p>
+<p><img src="METTWeb/Media/Products/OrderWithOrderDetails.PNG" width="300" /></p>
 
 ### Deposit
 User can be able to make a deposit
-<p><img src="assets/profile.png" width="300" /></p>
+<p><img src="METTWeb/Media/Products/Deposit.PNG" width="300" /></p>
 
 ### Transaction,
 Show All the transactions of a use with the description
-<p><img src="assets/photo-upload.png" width="300" /></p>
+<p><img src="METTWeb/Media/Products/transaction.PNG" width="300" /></p>
 
 ## Features
 * Login/Logout with authorisation/authentication.
