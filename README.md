@@ -16,7 +16,7 @@ Shows all available products in the database that are available, the user can be
 
 ### Filter Products By Drinks
 Shows all the drinks that are available 
-<p><img src="assets/AllBread.png" width="600" height="500" /></p>
+<p><img src="assets/AllBread.PNG" width="600" height="500" /></p>
 
 <p><img src="assets/login.png" width="300" /></p>
 
