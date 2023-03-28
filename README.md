@@ -2,7 +2,6 @@
 
 Application Requirements Overview Each person will register on the platform and fund their account in order to purchase items from the kiosk.
 
-The owner would be able to maintain the products and users and you would therefore have to build in maintenance screens and find a way to manage, products, types of products, update prices and more…
 
 Owner/Administrator (Super User) a) The owner purchases products from various suppliers and records the information in the application using a maintenance screen. b) The owner would also be required to mark some products as not available and these should not be displayed in the application. (The supplier information and different prices from various suppliers does not have to be saved in the application.) c) Your administrator user should have the same functionality as a normal user, i.e. purchase items.
 
@@ -33,7 +32,7 @@ Shows all the orders of a specific user with the details of each order
 
 ### Deposit
 User can be able to make a deposit
-<p><img src="METTWeb/Media/Products/Deposit.PNG" width="300" /></p>
+<p><img src="METTWeb/Media/Products/deposit.PNG" width="300" /></p>
 
 ### Transaction,
 Show All the transactions of a use with the description
