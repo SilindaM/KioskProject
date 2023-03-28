@@ -12,7 +12,7 @@ Users a) When a user logs into the system for the first time they should have th
 
 ### All Products
 Shows all available products in the database that are available, the user can be able to add to cart
-<p><img src="METTWeb/Media/Products/" width="300" /></p>
+<p><img src="METTWeb/Media/Products/AllProducts.PNG" width="300" /></p>
 
 ### Filter Products By Drinks
 Shows all the drinks that are available 
